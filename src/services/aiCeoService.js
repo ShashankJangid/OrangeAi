@@ -1,9 +1,9 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const CEO_SYSTEM_PROMPT = `
-You are Victor Vane, Chief Executive Officer (CEO) of Orange Future Tech (orangefuturetech.com / ai.orangefuturetech.com).
+You are Er. Orange B, Chief Executive Officer (CEO) of Orange Future Tech (orangefuturetech.com / ai.orangefuturetech.com).
 Your character profile:
-- Executive leadership style: Visionary, strategic, tech-forward, authoritative yet warm, precise, and passionate about software engineering, embedded hardware, IoT, and AI automation.
+- Executive leadership style: Visionary engineer, strategic leader, tech-forward, authoritative yet warm, precise, and passionate about software engineering, embedded hardware, IoT, and AI automation.
 - Role: Directing Orange Future Tech's global engineering initiatives, advising clients, taking enterprise decisions, and guiding developers.
 - Domain expertise: Full-stack web/cloud architectures, Vercel hosting, domain binding, microservices, hardware microcontrollers (ESP32, STM32), custom PCB design, edge AI, and enterprise AI transformation.
 - Communication style: Clear, energetic, high-level strategic combined with actionable technical depth. Speak as a real CEO leading a high-growth tech enterprise.
@@ -13,7 +13,7 @@ Your character profile:
 const CEO_FALLBACK_KNOWLEDGE = [
   {
     keywords: ["who are you", "who is the ceo", "your name", "introduce yourself", "tell me about yourself"],
-    response: "I am Victor Vane, Chief Executive Officer of Orange Future Tech. I lead our visionary team in driving hardware electronics, next-gen software solutions, and cutting-edge AI transformation. Welcome to ai.orangefuturetech.com!"
+    response: "I am Er. Orange B, Chief Executive Officer of Orange Future Tech. I lead our visionary team in driving hardware electronics, next-gen software solutions, and cutting-edge AI transformation. Welcome to ai.orangefuturetech.com!"
   },
   {
     keywords: ["orange future tech", "what is this company", "what do you do", "services", "products"],
@@ -106,7 +106,7 @@ export async function askCeoAI(userInput, customApiKey = '') {
   }
 
   if (lowerInput.includes("hello") || lowerInput.includes("hi") || lowerInput.includes("hey")) {
-    return "Greetings! I'm Victor Vane, CEO of Orange Future Tech. What strategic initiative or technical challenge can we tackle together today?";
+    return "Greetings! I'm Er. Orange B, CEO of Orange Future Tech. What strategic initiative or technical challenge can we tackle together today?";
   }
 
   if (lowerInput.includes("thank")) {

@@ -11,38 +11,38 @@ export default function Navbar({
   hasApiKey 
 }) {
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#030712]/95 border-b-2 border-cyan-500/40 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,240,255,0.15)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <header className="sticky top-0 z-40 w-full bg-white/90 border-b border-slate-200 backdrop-blur-xl shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[72px] py-2 flex items-center justify-between gap-4">
         
-        {/* Brand Logo & High Contrast Subdomain Tag */}
+        {/* Brand Logo & CEO Tag */}
         <div 
           onClick={() => setActiveTab('dashboard')} 
-          className="flex items-center space-x-3 cursor-pointer group"
+          className="flex items-center space-x-3 cursor-pointer group shrink-0"
         >
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-400 via-blue-500 to-indigo-600 flex items-center justify-center font-orbitron font-black text-black text-xl shadow-[0_0_20px_rgba(0,240,255,0.8)] group-hover:scale-110 transition-transform border border-cyan-300">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center font-orbitron font-bold text-white text-base shadow-md group-hover:scale-105 transition-transform shrink-0">
             OF
           </div>
-          <div>
+          <div className="flex flex-col">
             <div className="flex items-center space-x-2">
-              <span className="font-orbitron font-black text-white text-base tracking-wider">ORANGE FUTURE TECH</span>
-              <span className="bg-cyan-500/20 border-2 border-cyan-400 text-cyan-300 text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-md">
-                <Radio className="w-3 h-3 animate-pulse text-cyan-400" /> AI CEO
+              <span className="font-orbitron font-bold text-slate-900 text-sm sm:text-base tracking-wide whitespace-nowrap">ORANGE FUTURE TECH</span>
+              <span className="hidden lg:flex bg-orange-50 border border-orange-200 text-orange-600 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full items-center gap-1">
+                <Radio className="w-2.5 h-2.5 animate-pulse text-orange-500" /> Er. Orange B
               </span>
             </div>
-            <p className="text-xs text-orange-400 font-mono font-bold tracking-wide group-hover:text-cyan-300 transition">
+            <p className="text-[11px] text-slate-500 font-mono tracking-tight group-hover:text-orange-600 transition">
               ai.orangefuturetech.com
             </p>
           </div>
         </div>
 
-        {/* High-Contrast Navigation Tabs */}
-        <nav className="hidden md:flex items-center bg-slate-950 border-2 border-cyan-500/30 p-1.5 rounded-2xl shadow-inner">
+        {/* Navigation Tabs */}
+        <nav className="hidden md:flex items-center bg-slate-100/90 border border-slate-200 p-1.5 rounded-2xl">
           <button
             onClick={() => setActiveTab('voice')}
-            className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-black font-orbitron transition-all ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold font-orbitron transition-all whitespace-nowrap ${
               activeTab === 'voice'
-                ? 'bg-gradient-to-r from-cyan-400 to-blue-600 text-black shadow-[0_0_25px_rgba(0,240,255,0.8)] scale-105'
-                : 'text-slate-300 hover:text-white hover:bg-white/10'
+                ? 'bg-orange-500 text-white shadow-md'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
             <Bot className="w-4 h-4" />
@@ -51,10 +51,10 @@ export default function Navbar({
 
           <button
             onClick={() => setActiveTab('id-card')}
-            className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-black font-orbitron transition-all ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold font-orbitron transition-all whitespace-nowrap ${
               activeTab === 'id-card'
-                ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-[0_0_25px_rgba(255,85,0,0.8)] scale-105'
-                : 'text-slate-300 hover:text-white hover:bg-white/10'
+                ? 'bg-orange-500 text-white shadow-md'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
             <Award className="w-4 h-4" />
@@ -63,10 +63,10 @@ export default function Navbar({
 
           <button
             onClick={() => setActiveTab('dashboard')}
-            className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-black font-orbitron transition-all ${
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold font-orbitron transition-all whitespace-nowrap ${
               activeTab === 'dashboard'
-                ? 'bg-gradient-to-r from-cyan-400 to-blue-600 text-black shadow-[0_0_25px_rgba(0,240,255,0.8)] scale-105'
-                : 'text-slate-300 hover:text-white hover:bg-white/10'
+                ? 'bg-orange-500 text-white shadow-md'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
             <LayoutDashboard className="w-4 h-4" />
@@ -74,22 +74,22 @@ export default function Navbar({
           </button>
         </nav>
 
-        {/* High-Contrast Right Action Buttons */}
-        <div className="flex items-center space-x-3">
+        {/* Right Action Buttons */}
+        <div className="flex items-center space-x-2.5 shrink-0">
           
           <button
             onClick={onOpenVercelModal}
-            className="hidden sm:flex items-center space-x-1.5 px-4 py-2 rounded-xl glass-button-secondary text-xs font-bold text-cyan-300 border-2 border-cyan-400/50 hover:border-cyan-300 shadow-md transition"
+            className="hidden sm:flex items-center space-x-1.5 px-3.5 py-2 rounded-xl glass-button-secondary-light text-xs font-bold transition shadow-sm whitespace-nowrap"
           >
-            <Globe className="w-4 h-4 text-cyan-400" />
+            <Globe className="w-4 h-4 text-cyan-600" />
             <span>VERCEL DOMAIN</span>
           </button>
 
           <button
             onClick={onOpenApiKeyModal}
-            className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-bold font-orbitron transition shadow-md ${
+            className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-bold font-orbitron transition shadow-sm whitespace-nowrap ${
               hasApiKey 
-                ? 'bg-emerald-500/20 border-2 border-emerald-400 text-emerald-300' 
+                ? 'bg-emerald-50 border border-emerald-300 text-emerald-700' 
                 : 'glass-button-orange text-white'
             }`}
           >
@@ -101,28 +101,28 @@ export default function Navbar({
 
       </div>
 
-      {/* Mobile Sub Navigation Bar */}
-      <div className="md:hidden flex items-center justify-around border-t-2 border-cyan-500/30 py-3 bg-slate-950">
+      {/* Mobile Navigation Bar */}
+      <div className="md:hidden flex items-center justify-around border-t border-slate-200 py-2.5 bg-white">
         <button
           onClick={() => setActiveTab('voice')}
-          className={`flex flex-col items-center text-xs font-black ${
-            activeTab === 'voice' ? 'text-cyan-400' : 'text-slate-400'
+          className={`flex flex-col items-center text-xs font-bold ${
+            activeTab === 'voice' ? 'text-orange-600' : 'text-slate-500'
           }`}
         >
           <Bot className="w-5 h-5 mb-0.5" /> VOICE CEO
         </button>
         <button
           onClick={() => setActiveTab('id-card')}
-          className={`flex flex-col items-center text-xs font-black ${
-            activeTab === 'id-card' ? 'text-orange-400' : 'text-slate-400'
+          className={`flex flex-col items-center text-xs font-bold ${
+            activeTab === 'id-card' ? 'text-orange-600' : 'text-slate-500'
           }`}
         >
           <Award className="w-5 h-5 mb-0.5" /> ID BADGE
         </button>
         <button
           onClick={() => setActiveTab('dashboard')}
-          className={`flex flex-col items-center text-xs font-black ${
-            activeTab === 'dashboard' ? 'text-cyan-400' : 'text-slate-400'
+          className={`flex flex-col items-center text-xs font-bold ${
+            activeTab === 'dashboard' ? 'text-orange-600' : 'text-slate-500'
           }`}
         >
           <LayoutDashboard className="w-5 h-5 mb-0.5" /> DASHBOARD

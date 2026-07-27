@@ -31,9 +31,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#070b12] text-slate-100 font-sans selection:bg-orange-500 selection:text-white relative overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans selection:bg-orange-500 selection:text-white relative overflow-x-hidden">
       
-      {/* Dynamic Cyber Interactive Background */}
+      {/* Light Cyber Background Canvas */}
       <CyberBackgroundCanvas />
 
       {/* Top Header Navbar */}
@@ -69,27 +69,27 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-orange-500/20 bg-slate-950/90 backdrop-blur-md py-6 mt-12 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+      <footer className="w-full border-t border-slate-200 bg-white/90 backdrop-blur-md py-6 mt-12 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
           <div className="flex items-center space-x-2 font-mono">
-            <Radio className="w-3.5 h-3.5 text-orange-400 animate-pulse" />
+            <Radio className="w-3.5 h-3.5 text-orange-500 animate-pulse" />
             <span>Orange Future Tech AI CEO Console</span>
-            <span className="text-slate-600">|</span>
-            <span className="text-orange-400 font-bold">ai.orangefuturetech.com</span>
+            <span className="text-slate-300">|</span>
+            <span className="text-orange-600 font-bold">ai.orangefuturetech.com</span>
           </div>
 
           <div className="flex items-center space-x-6">
             <button 
               onClick={() => setIsVercelModalOpen(true)} 
-              className="hover:text-white transition flex items-center gap-1"
+              className="hover:text-slate-900 transition flex items-center gap-1 font-semibold"
             >
-              <Globe className="w-3.5 h-3.5 text-cyan-400" /> Vercel Deployment Guide
+              <Globe className="w-3.5 h-3.5 text-cyan-600" /> Vercel Deployment Guide
             </button>
             <button 
               onClick={() => setActiveTab('id-card')} 
-              className="hover:text-white transition flex items-center gap-1"
+              className="hover:text-slate-900 transition flex items-center gap-1 font-semibold"
             >
-              <Shield className="w-3.5 h-3.5 text-orange-400" /> Security ID Badges
+              <Shield className="w-3.5 h-3.5 text-orange-600" /> Security ID Badges
             </button>
           </div>
         </div>

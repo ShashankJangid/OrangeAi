@@ -12,7 +12,7 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
     {
       id: 1,
       sender: 'ceo',
-      text: "Greetings. I am Victor Vane, CEO of Orange Future Tech. Welcome to ai.orangefuturetech.com. Speak or type to discuss our software solutions, hardware systems, or enterprise AI strategy.",
+      text: "Greetings. I am Er. Orange B, CEO of Orange Future Tech. Welcome to ai.orangefuturetech.com. Speak or type to discuss our software solutions, hardware systems, or enterprise AI strategy.",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -63,7 +63,7 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
     };
 
     setMessages(prev => [...prev, userMsg]);
-    setInputText('');
+    setInputText(''); // Clear text bar when text message is submitted
     setSttTranscript('');
     setIsThinking(true);
     speechManager.stopSpeaking();
@@ -106,6 +106,8 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
 
     setIsListening(true);
     setSttTranscript('');
+    
+    // Voice STT stays in sttTranscript and does NOT fill or overwrite inputText field!
     speechManager.startListening(
       (transcript, isFinal) => {
         setSttTranscript(transcript);
@@ -134,96 +136,68 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       
-      {/* Left Column: Holographic CEO Avatar & Futuristic Control Terminal */}
-      <div className="lg:col-span-5 glass-panel-futuristic rounded-3xl p-6 flex flex-col items-center justify-between border-2 border-cyan-400/50 shadow-[0_0_50px_rgba(0,240,255,0.2)] relative overflow-hidden">
+      {/* Left Column: Holographic CEO Avatar & Glass Profile */}
+      <div className="lg:col-span-5 glass-panel-light rounded-3xl p-6 flex flex-col items-center justify-between shadow-xl relative overflow-hidden">
         
-        {/* Sci-Fi Corner Bracket Accents */}
-        <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-cyan-400" />
-        <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-cyan-400" />
-        <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-cyan-400" />
-        <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-cyan-400" />
-
         {/* Header Telemetry */}
-        <div className="w-full flex items-center justify-between border-b border-cyan-500/30 pb-4 mb-2">
+        <div className="w-full flex items-center justify-between border-b border-slate-200/80 pb-4 mb-2">
           <div className="flex items-center space-x-2">
-            <div className="w-3.5 h-3.5 rounded-full bg-cyan-400 animate-ping" />
-            <span className="font-orbitron text-xs tracking-wider text-cyan-300 font-black uppercase">
+            <div className="w-3 h-3 rounded-full bg-orange-500 animate-pulse" />
+            <span className="font-orbitron text-xs tracking-wider text-slate-800 font-bold uppercase">
               AI CEO EXECUTIVE CORE
             </span>
           </div>
-          <span className="text-xs bg-cyan-500/20 border border-cyan-400 text-cyan-300 px-3 py-1 rounded-full font-mono font-bold flex items-center gap-1 shadow-md">
-            <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" /> ai.orangefuturetech.com
+          <span className="text-xs bg-orange-50 border border-orange-200 text-orange-600 px-3 py-1 rounded-full font-mono font-bold flex items-center gap-1 shadow-sm">
+            <Radio className="w-3.5 h-3.5 text-orange-500 animate-pulse" /> ai.orangefuturetech.com
           </span>
         </div>
 
-        {/* Dynamic Canvas Hologram Avatar */}
+        {/* Dynamic Canvas Avatar */}
         <CeoAvatarCanvas isSpeaking={isSpeaking} isListening={isListening} isThinking={isThinking} />
 
         {/* CEO Identity Info */}
         <div className="text-center my-3">
-          <h2 className="text-2xl font-black font-orbitron text-white flex items-center justify-center gap-2 text-shadow-glow">
-            Victor Vane <Award className="w-5 h-5 text-yellow-400" />
+          <h2 className="text-2xl font-black font-orbitron text-slate-900 flex items-center justify-center gap-2">
+            Er. Orange B <Award className="w-5 h-5 text-orange-500" />
           </h2>
-          <p className="text-xs text-cyan-300 font-mono font-bold tracking-wide mt-1">Chief Executive Officer | Orange Future Tech</p>
+          <p className="text-xs text-orange-600 font-mono font-bold tracking-wide mt-1">Chief Executive Officer | Orange Future Tech</p>
           
           <div className="flex items-center justify-center gap-2 mt-2">
-            <span className={`text-xs font-mono font-black uppercase px-4 py-1 rounded-full border-2 shadow-xl ${
-              isSpeaking ? 'bg-amber-500/30 text-amber-300 border-amber-400 animate-pulse' :
-              isListening ? 'bg-cyan-500/30 text-cyan-300 border-cyan-400 animate-pulse' :
-              isThinking ? 'bg-purple-500/30 text-purple-300 border-purple-400 animate-pulse' :
-              'bg-emerald-500/25 text-emerald-300 border-emerald-400'
+            <span className={`text-xs font-mono font-bold uppercase px-4 py-1 rounded-full border shadow-sm ${
+              isSpeaking ? 'bg-orange-100 text-orange-700 border-orange-300 animate-pulse' :
+              isListening ? 'bg-cyan-100 text-cyan-700 border-cyan-300 animate-pulse' :
+              isThinking ? 'bg-purple-100 text-purple-700 border-purple-300 animate-pulse' :
+              'bg-emerald-50 text-emerald-700 border-emerald-300'
             }`}>
               {isSpeaking ? '🔊 VOICE ACTIVE' : isListening ? '🎙️ LISTENING...' : isThinking ? '⚡ ANALYZING...' : '● EXECUTIVE READY'}
             </span>
           </div>
         </div>
 
-        {/* Equalizer Visualizer Strip when Speaking */}
+        {/* Voice Equalizer Bar when Speaking */}
         {isSpeaking && (
           <div className="w-full flex items-center justify-center space-x-1.5 py-2">
             {[40, 75, 35, 95, 55, 85, 45, 100, 65, 35].map((h, idx) => (
               <div 
                 key={idx}
-                style={{ height: `${h * 0.28}px`, animationDelay: `${idx * 0.1}s` }}
-                className="w-1.5 bg-gradient-to-t from-cyan-400 via-blue-400 to-yellow-300 rounded-full animate-wave-bar"
+                style={{ height: `${h * 0.26}px`, animationDelay: `${idx * 0.1}s` }}
+                className="w-1.5 bg-gradient-to-t from-orange-500 to-amber-400 rounded-full animate-wave-bar"
               />
             ))}
           </div>
         )}
 
-        {/* Voice-to-Voice Controls */}
-        <div className="w-full space-y-3 pt-3 border-t border-cyan-500/30">
+        {/* Voice Loop & Mute Options */}
+        <div className="w-full space-y-3 pt-3 border-t border-slate-200/80">
           
-          <div className="flex items-center justify-center space-x-3">
-            <button
-              onClick={() => toggleListening()}
-              className={`w-full py-4 px-6 rounded-2xl font-black font-orbitron flex items-center justify-center gap-3 transition-all duration-300 shadow-2xl ${
-                isListening 
-                  ? 'bg-cyan-400 text-black shadow-[0_0_40px_rgba(0,240,255,1)] scale-105 animate-pulse' 
-                  : 'glass-button-cyan text-black hover:scale-[1.02]'
-              }`}
-            >
-              {isListening ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6 animate-bounce" />}
-              <span>{isListening ? 'STOP LISTENING' : 'PUSH TO TALK (VOICE)'}</span>
-            </button>
-            
-            <button
-              onClick={stopAllAudio}
-              title="Mute / Stop Speech"
-              className="p-4 rounded-2xl glass-button-secondary text-white hover:border-cyan-300"
-            >
-              {isSpeaking ? <VolumeX className="w-6 h-6 text-orange-400" /> : <Volume2 className="w-6 h-6 text-cyan-400" />}
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between bg-slate-950/80 p-3.5 rounded-2xl border border-cyan-500/40 shadow-inner">
+          <div className="flex items-center justify-between bg-slate-100/80 p-3 rounded-2xl border border-slate-200 shadow-inner">
             <div className="flex items-center gap-2.5">
-              <div className="p-1.5 bg-cyan-500/20 rounded-lg">
-                <Zap className="w-4 h-4 text-cyan-400" />
+              <div className="p-1.5 bg-orange-100 rounded-lg">
+                <Zap className="w-4 h-4 text-orange-600" />
               </div>
               <div>
-                <p className="text-xs font-black text-white font-orbitron">Continuous Voice Loop</p>
-                <p className="text-[10px] text-slate-300 font-mono">Auto-listen after CEO responds</p>
+                <p className="text-xs font-bold text-slate-800 font-orbitron">Continuous Voice Loop</p>
+                <p className="text-[10px] text-slate-500 font-mono">Auto-listen after CEO responds</p>
               </div>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
@@ -233,42 +207,56 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
                 onChange={(e) => setVoiceToVoiceMode(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-10 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-400"></div>
+              <div className="w-10 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-orange-500"></div>
             </label>
           </div>
 
+          {/* Live Voice STT Floating Speech Banner */}
           {sttTranscript && (
-            <div className="p-3.5 bg-cyan-950/90 border-2 border-cyan-400 rounded-xl text-xs text-white shadow-xl animate-fadeIn font-mono">
-              <span className="font-bold text-cyan-400">Live Speech: </span>"{sttTranscript}"
+            <div className="p-3 bg-cyan-50 border border-cyan-200 rounded-xl text-xs text-cyan-900 shadow-md animate-fadeIn font-mono">
+              <span className="font-bold text-cyan-600">🎙️ Spoken Voice: </span>"{sttTranscript}"
             </div>
           )}
 
         </div>
       </div>
 
-      {/* Right Column: Glassmorphism Terminal Console */}
-      <div className="lg:col-span-7 glass-panel-futuristic rounded-3xl p-6 flex flex-col h-[610px] border-2 border-cyan-400/50 shadow-[0_0_50px_rgba(0,240,255,0.2)] relative">
+      {/* Right Column: Glassmorphism White Minimalist Terminal */}
+      <div className="lg:col-span-7 glass-panel-light rounded-3xl p-6 flex flex-col h-[610px] shadow-xl relative">
         
-        <div className="flex items-center justify-between pb-4 border-b border-cyan-500/30 mb-4">
+        {/* Terminal Header */}
+        <div className="flex items-center justify-between pb-4 border-b border-slate-200/80 mb-4">
           <div className="flex items-center space-x-3">
-            <div className="p-2.5 bg-cyan-500/20 rounded-xl border border-cyan-400">
-              <Bot className="w-6 h-6 text-cyan-400" />
+            <div className="p-2 bg-orange-500/10 rounded-xl border border-orange-200">
+              <Bot className="w-6 h-6 text-orange-600" />
             </div>
             <div>
-              <h3 className="font-orbitron font-black text-white text-base">CEO Strategic Terminal</h3>
-              <p className="text-xs text-orange-400 font-mono font-bold">Voice & Text Executive Stream</p>
+              <h3 className="font-orbitron font-bold text-slate-900 text-base">CEO Strategic Terminal</h3>
+              <p className="text-xs text-orange-600 font-mono font-bold">Er. Orange B Executive Console</p>
             </div>
           </div>
 
-          <button
-            onClick={() => setMessages([messages[0]])}
-            className="text-xs text-slate-200 hover:text-cyan-300 flex items-center gap-1 font-mono transition bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20 font-bold"
-            title="Reset Terminal"
-          >
-            <RefreshCw className="w-3.5 h-3.5" /> Clear Log
-          </button>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={stopAllAudio}
+              className="text-xs text-slate-600 hover:text-orange-600 flex items-center gap-1 font-mono transition bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl border border-slate-200 font-bold"
+              title="Stop Speech"
+            >
+              {isSpeaking ? <VolumeX className="w-3.5 h-3.5 text-orange-600" /> : <Volume2 className="w-3.5 h-3.5 text-slate-600" />}
+              <span>{isSpeaking ? 'Mute' : 'Audio'}</span>
+            </button>
+
+            <button
+              onClick={() => setMessages([messages[0]])}
+              className="text-xs text-slate-600 hover:text-slate-900 flex items-center gap-1 font-mono transition bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl border border-slate-200 font-bold"
+              title="Reset Terminal"
+            >
+              <RefreshCw className="w-3.5 h-3.5" /> Clear
+            </button>
+          </div>
         </div>
 
+        {/* Message Log */}
         <div className="flex-1 overflow-y-auto space-y-4 pr-2">
           {messages.map((msg) => (
             <div
@@ -276,7 +264,7 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
               className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {msg.sender === 'ceo' && (
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-400 via-blue-600 to-indigo-600 flex items-center justify-center text-black text-xs font-black font-orbitron shrink-0 shadow-lg shadow-cyan-500/50 border border-cyan-300">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-500 flex items-center justify-center text-white text-xs font-bold font-orbitron shrink-0 shadow-md">
                   CEO
                 </div>
               )}
@@ -284,17 +272,17 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
               <div
                 className={`max-w-[85%] rounded-2xl p-4 text-sm leading-relaxed ${
                   msg.sender === 'user'
-                    ? 'bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 text-black font-black rounded-br-none shadow-[0_0_25px_rgba(0,240,255,0.4)]'
-                    : 'bg-slate-950/90 border-2 border-orange-500/50 text-slate-100 rounded-bl-none shadow-xl backdrop-blur-md font-medium'
+                    ? 'bg-slate-900 text-white font-medium rounded-br-none shadow-md'
+                    : 'bg-white border border-slate-200/90 text-slate-800 rounded-bl-none shadow-sm font-medium'
                 }`}
               >
                 <div className="flex items-center justify-between gap-4 mb-1.5">
-                  <span className={`text-[11px] font-mono font-black uppercase tracking-wider ${
-                    msg.sender === 'user' ? 'text-black' : 'text-orange-400'
+                  <span className={`text-[11px] font-mono font-bold uppercase tracking-wider ${
+                    msg.sender === 'user' ? 'text-orange-400' : 'text-orange-600'
                   }`}>
-                    {msg.sender === 'user' ? 'Executive Visitor' : 'Victor Vane (CEO)'}
+                    {msg.sender === 'user' ? 'Executive Visitor' : 'Er. Orange B (CEO)'}
                   </span>
-                  <span className={`text-[10px] font-mono ${msg.sender === 'user' ? 'text-black/80' : 'text-slate-400'}`}>{msg.timestamp}</span>
+                  <span className={`text-[10px] font-mono ${msg.sender === 'user' ? 'text-slate-400' : 'text-slate-400'}`}>{msg.timestamp}</span>
                 </div>
                 
                 <p className="whitespace-pre-wrap">{msg.text}</p>
@@ -302,15 +290,15 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
                 {msg.sender === 'ceo' && (
                   <button
                     onClick={() => handleSpeakCeo(msg.text)}
-                    className="mt-2.5 text-xs text-cyan-300 hover:text-white flex items-center gap-1.5 font-mono transition bg-cyan-500/20 px-3 py-1 rounded-lg border border-cyan-400 font-bold"
+                    className="mt-2.5 text-xs text-orange-600 hover:text-orange-700 flex items-center gap-1.5 font-mono transition bg-orange-50 px-3 py-1 rounded-lg border border-orange-200 font-bold"
                   >
-                    <Volume2 className="w-3.5 h-3.5 text-cyan-400" /> Replay Speech
+                    <Volume2 className="w-3.5 h-3.5 text-orange-600" /> Replay Speech
                   </button>
                 )}
               </div>
 
               {msg.sender === 'user' && (
-                <div className="w-10 h-10 rounded-xl bg-orange-500 border-2 border-orange-400 flex items-center justify-center text-white shrink-0 shadow-lg">
+                <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-white shrink-0 shadow-md">
                   <User className="w-5 h-5" />
                 </div>
               )}
@@ -318,42 +306,44 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           ))}
 
           {isThinking && (
-            <div className="flex items-center space-x-3 text-cyan-300 text-xs font-mono font-bold p-3 bg-cyan-500/20 rounded-xl border-2 border-cyan-400 w-fit">
-              <Sparkles className="w-4 h-4 animate-spin text-cyan-400" />
-              <span>Analyzing executive query...</span>
+            <div className="flex items-center space-x-3 text-orange-600 text-xs font-mono font-bold p-3 bg-orange-50 rounded-xl border border-orange-200 w-fit">
+              <Sparkles className="w-4 h-4 animate-spin text-orange-600" />
+              <span>Er. Orange B is analyzing query...</span>
             </div>
           )}
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="py-3 flex items-center gap-2 overflow-x-auto no-scrollbar border-t border-cyan-500/30 mt-2">
-          <span className="text-xs uppercase font-mono text-cyan-400 font-bold shrink-0">Prompts:</span>
+        {/* Quick Suggestion Pills */}
+        <div className="py-3 flex items-center gap-2 overflow-x-auto no-scrollbar border-t border-slate-200/80 mt-2">
+          <span className="text-xs uppercase font-mono text-slate-500 font-bold shrink-0">Prompts:</span>
           <button 
             onClick={() => handleSendMessage("Introduce yourself and Orange Future Tech")}
-            className="text-xs text-white font-bold bg-white/10 hover:bg-cyan-500/30 border border-cyan-400/50 hover:border-cyan-300 px-3.5 py-1.5 rounded-full whitespace-nowrap transition"
+            className="text-xs text-slate-700 font-semibold bg-white hover:bg-orange-50 border border-slate-300 hover:border-orange-400 px-3.5 py-1.5 rounded-full whitespace-nowrap transition shadow-sm"
           >
             🏢 Introduce Company
           </button>
           <button 
             onClick={() => handleSendMessage("How do I deploy this app to ai.orangefuturetech.com on Vercel?")}
-            className="text-xs text-white font-bold bg-white/10 hover:bg-cyan-500/30 border border-cyan-400/50 hover:border-cyan-300 px-3.5 py-1.5 rounded-full whitespace-nowrap transition"
+            className="text-xs text-slate-700 font-semibold bg-white hover:bg-orange-50 border border-slate-300 hover:border-orange-400 px-3.5 py-1.5 rounded-full whitespace-nowrap transition shadow-sm"
           >
             🚀 Vercel Hosting Guide
           </button>
           <button 
             onClick={() => handleSendMessage("What hardware, software, and AI solutions do you build?")}
-            className="text-xs text-white font-bold bg-white/10 hover:bg-cyan-500/30 border border-cyan-400/50 hover:border-cyan-300 px-3.5 py-1.5 rounded-full whitespace-nowrap transition"
+            className="text-xs text-slate-700 font-semibold bg-white hover:bg-orange-50 border border-slate-300 hover:border-orange-400 px-3.5 py-1.5 rounded-full whitespace-nowrap transition shadow-sm"
           >
             ⚡ Solutions & Products
           </button>
           <button 
             onClick={() => handleSendMessage("Generate an Executive ID Card for me")}
-            className="text-xs text-white font-bold bg-white/10 hover:bg-cyan-500/30 border border-cyan-400/50 hover:border-cyan-300 px-3.5 py-1.5 rounded-full whitespace-nowrap transition"
+            className="text-xs text-slate-700 font-semibold bg-white hover:bg-orange-50 border border-slate-300 hover:border-orange-400 px-3.5 py-1.5 rounded-full whitespace-nowrap transition shadow-sm"
           >
             🪪 Create ID Card
           </button>
         </div>
 
+        {/* Text Bar & Push to Talk Microphone Button Next to Input Bar */}
         <form 
           onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }} 
           className="flex items-center gap-2 pt-2"
@@ -362,13 +352,29 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
             type="text"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
-            placeholder="Type your message to CEO Victor Vane..."
-            className="flex-1 bg-slate-950/90 border-2 border-cyan-500/40 focus:border-cyan-300 rounded-2xl px-4 py-3.5 text-sm text-white placeholder-slate-400 outline-none transition font-medium shadow-inner"
+            placeholder="Type your message to CEO Er. Orange B..."
+            className="flex-1 bg-white border border-slate-300 focus:border-orange-500 rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition font-medium shadow-sm"
           />
+
+          {/* PUSH TO TALK MICROPHONE BUTTON RIGHT NEXT TO TEXT BAR */}
+          <button
+            type="button"
+            onClick={() => toggleListening()}
+            title="Push to Talk Microphone"
+            className={`p-3.5 rounded-2xl font-bold transition-all shadow-md flex items-center justify-center ${
+              isListening
+                ? 'bg-cyan-500 text-white shadow-[0_0_20px_rgba(0,180,216,0.6)] animate-pulse scale-105'
+                : 'bg-orange-500 text-white hover:bg-orange-600'
+            }`}
+          >
+            {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5 animate-bounce" />}
+          </button>
+
+          {/* Send Text Button */}
           <button
             type="submit"
             disabled={!inputText.trim()}
-            className="glass-button-cyan p-3.5 rounded-2xl text-black font-black disabled:opacity-50 disabled:cursor-not-allowed shadow-xl"
+            className="glass-button-orange p-3.5 rounded-2xl text-white disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
           >
             <Send className="w-5 h-5" />
           </button>

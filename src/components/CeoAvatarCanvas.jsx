@@ -21,12 +21,12 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
     resize();
     window.addEventListener('resize', resize);
 
-    const particles = Array.from({ length: 60 }, () => ({
+    const particles = Array.from({ length: 50 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      radius: Math.random() * 2.8 + 1.2,
-      speedX: (Math.random() - 0.5) * 1.8,
-      speedY: (Math.random() - 0.5) * 1.8,
+      radius: Math.random() * 2.5 + 1.2,
+      speedX: (Math.random() - 0.5) * 1.4,
+      speedY: (Math.random() - 0.5) * 1.4,
     }));
 
     const render = () => {
@@ -37,8 +37,8 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
       const baseRadius = Math.min(centerX, centerY) * 0.42;
 
       particles.forEach(p => {
-        p.x += p.speedX * (isSpeaking ? 2.2 : 1);
-        p.y += p.speedY * (isSpeaking ? 2.2 : 1);
+        p.x += p.speedX * (isSpeaking ? 2 : 1);
+        p.y += p.speedY * (isSpeaking ? 2 : 1);
 
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
@@ -47,15 +47,13 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = isListening ? '#00F0FF' : isSpeaking ? '#FF5500' : '#FFD700';
-        ctx.shadowColor = isListening ? '#00F0FF' : '#FF5500';
-        ctx.shadowBlur = 14;
+        ctx.fillStyle = isListening ? 'rgba(0, 180, 216, 0.7)' : isSpeaking ? 'rgba(255, 107, 0, 0.8)' : 'rgba(255, 140, 0, 0.5)';
         ctx.fill();
       });
 
       let pulseMultiplier = 1;
       if (isSpeaking) {
-        pulseMultiplier = 1 + Math.sin(Date.now() * 0.018) * 0.15;
+        pulseMultiplier = 1 + Math.sin(Date.now() * 0.018) * 0.14;
       } else if (isListening) {
         pulseMultiplier = 1 + Math.sin(Date.now() * 0.024) * 0.09;
       } else if (isThinking) {
@@ -71,24 +69,24 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
 
       if (isSpeaking) {
         coreGrad.addColorStop(0, '#FFFFFF');
-        coreGrad.addColorStop(0.25, '#FFD700');
-        coreGrad.addColorStop(0.65, '#FF3300');
-        coreGrad.addColorStop(1, 'rgba(255, 51, 0, 0)');
+        coreGrad.addColorStop(0.3, '#FFB703');
+        coreGrad.addColorStop(0.7, '#FF6B00');
+        coreGrad.addColorStop(1, 'rgba(255, 107, 0, 0)');
       } else if (isListening) {
         coreGrad.addColorStop(0, '#FFFFFF');
-        coreGrad.addColorStop(0.25, '#00F0FF');
-        coreGrad.addColorStop(0.7, '#0044FF');
-        coreGrad.addColorStop(1, 'rgba(0, 68, 255, 0)');
+        coreGrad.addColorStop(0.3, '#48CAE4');
+        coreGrad.addColorStop(0.7, '#0077B6');
+        coreGrad.addColorStop(1, 'rgba(0, 119, 182, 0)');
       } else if (isThinking) {
         coreGrad.addColorStop(0, '#FFFFFF');
-        coreGrad.addColorStop(0.25, '#E082FF');
+        coreGrad.addColorStop(0.3, '#C084FC');
         coreGrad.addColorStop(0.7, '#7C3AED');
         coreGrad.addColorStop(1, 'rgba(124, 58, 237, 0)');
       } else {
         coreGrad.addColorStop(0, '#FFFFFF');
-        coreGrad.addColorStop(0.3, '#00F0FF');
-        coreGrad.addColorStop(0.75, '#FF5500');
-        coreGrad.addColorStop(1, 'rgba(255, 85, 0, 0)');
+        coreGrad.addColorStop(0.35, '#FF8800');
+        coreGrad.addColorStop(0.8, '#E05300');
+        coreGrad.addColorStop(1, 'rgba(224, 83, 0, 0)');
       }
 
       ctx.beginPath();
@@ -103,23 +101,21 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
       ctx.rotate(-hudAngle);
       ctx.beginPath();
       ctx.arc(0, 0, currentRadius * 1.55, 0, Math.PI * 2);
-      ctx.setLineDash([12, 16]);
-      ctx.strokeStyle = isListening ? '#00F0FF' : '#FF5500';
-      ctx.lineWidth = 2.8;
-      ctx.shadowColor = isListening ? '#00F0FF' : '#FF5500';
-      ctx.shadowBlur = 18;
+      ctx.setLineDash([10, 14]);
+      ctx.strokeStyle = isListening ? 'rgba(0, 180, 216, 0.7)' : 'rgba(255, 107, 0, 0.7)';
+      ctx.lineWidth = 2.2;
       ctx.stroke();
       ctx.restore();
 
-      const numBars = 48;
+      const numBars = 44;
       for (let b = 0; b < numBars; b++) {
         const barAngle = (b / numBars) * Math.PI * 2;
-        let barHeight = 10;
+        let barHeight = 8;
 
         if (isSpeaking) {
-          barHeight = Math.sin(Date.now() * 0.016 + b * 0.6) * 30 + 24;
+          barHeight = Math.sin(Date.now() * 0.016 + b * 0.6) * 26 + 18;
         } else if (isListening) {
-          barHeight = Math.sin(Date.now() * 0.02 + b * 0.5) * 15 + 12;
+          barHeight = Math.sin(Date.now() * 0.02 + b * 0.5) * 12 + 10;
         }
 
         const x1 = centerX + Math.cos(barAngle) * (currentRadius * 1.14);
@@ -132,32 +128,26 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
         ctx.lineTo(x2, y2);
         
         ctx.strokeStyle = isSpeaking 
-          ? (b % 2 === 0 ? '#FFD700' : '#FF5500')
+          ? (b % 2 === 0 ? '#FFB703' : '#FF6B00')
           : isListening 
-          ? '#00F0FF' 
-          : '#00F0FF';
+          ? '#00B4D8' 
+          : '#FF6B00';
 
-        ctx.lineWidth = 3.2;
-        ctx.shadowColor = ctx.strokeStyle;
-        ctx.shadowBlur = 14;
+        ctx.lineWidth = 2.5;
         ctx.stroke();
       }
 
       ctx.save();
-      ctx.font = '900 28px Orbitron, sans-serif';
-      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '900 24px Orbitron, sans-serif';
+      ctx.fillStyle = '#0F172A';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.shadowColor = '#00F0FF';
-      ctx.shadowBlur = 24;
       ctx.fillText('CEO', centerX, centerY - 4);
 
-      ctx.font = '900 11px Inter, sans-serif';
-      ctx.fillStyle = isListening ? '#00F0FF' : isSpeaking ? '#FFD700' : '#00F0FF';
-      ctx.shadowColor = ctx.fillStyle;
-      ctx.shadowBlur = 12;
+      ctx.font = '800 11px Inter, sans-serif';
+      ctx.fillStyle = isListening ? '#0077B6' : isSpeaking ? '#E05300' : '#FF6B00';
       ctx.fillText(
-        isSpeaking ? '● VOICE ACTIVE' : isListening ? '● LISTENING...' : isThinking ? '● ANALYZING...' : 'VICTOR VANE',
+        isSpeaking ? '● VOICE ACTIVE' : isListening ? '● LISTENING...' : isThinking ? '● ANALYZING...' : 'Er. Orange B',
         centerX,
         centerY + 18
       );

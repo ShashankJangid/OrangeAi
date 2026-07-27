@@ -8,25 +8,23 @@ export default {
     extend: {
       colors: {
         brand: {
-          cyan: '#00F0FF',
-          cyanGlow: '#00E5FF',
-          orange: '#FF5500',
-          gold: '#FFD700',
-          darkBg: '#030712',
-          cardBg: 'rgba(10, 15, 26, 0.95)',
-          borderCyan: 'rgba(0, 240, 255, 0.4)',
-          borderOrange: 'rgba(255, 85, 0, 0.4)',
+          orange: '#FF6B00',
+          orangeDark: '#E05300',
+          cyan: '#00B4D8',
+          slateDark: '#0F172A',
+          glassWhite: 'rgba(255, 255, 255, 0.85)',
+          borderLight: 'rgba(0, 0, 0, 0.08)',
         }
       },
       animation: {
-        'pulse-glow': 'pulseGlow 1.8s infinite ease-in-out',
+        'pulse-glow': 'pulseGlow 2s infinite ease-in-out',
         'wave-bar': 'waveBar 1s infinite ease-in-out',
-        'hologram-scan': 'hologramScan 2.5s linear infinite',
+        'hologram-scan': 'hologramScan 3s linear infinite',
       },
       keyframes: {
         pulseGlow: {
-          '0%, 100%': { opacity: '0.7', filter: 'drop-shadow(0 0 15px rgba(0,240,255,0.6))' },
-          '50%': { opacity: '1', filter: 'drop-shadow(0 0 30px rgba(0,240,255,1))' },
+          '0%, 100%': { opacity: '0.8', filter: 'drop-shadow(0 0 12px rgba(255,107,0,0.3))' },
+          '50%': { opacity: '1', filter: 'drop-shadow(0 0 24px rgba(255,107,0,0.6))' },
         },
         waveBar: {
           '0%, 100%': { height: '15%' },

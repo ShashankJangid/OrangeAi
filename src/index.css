@@ -4,137 +4,102 @@
 
 :root {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 .font-orbitron {
   font-family: 'Orbitron', monospace, sans-serif;
 }
 
-/* Premium Quantum Glassmorphism System */
-.glass-panel-futuristic {
-  background: linear-gradient(135deg, rgba(13, 22, 40, 0.7) 0%, rgba(8, 14, 28, 0.85) 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1.5px solid rgba(0, 240, 255, 0.35);
+/* Light Minimalistic Glassmorphism Utilities */
+.glass-panel-light {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
   box-shadow: 
-    0 16px 40px 0 rgba(0, 0, 0, 0.7),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.15),
-    0 0 25px 0 rgba(0, 240, 255, 0.12);
-  position: relative;
-}
-
-.glass-panel-futuristic::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.8), rgba(255, 85, 0, 0.8), transparent);
-}
-
-.glass-panel-orange {
-  background: linear-gradient(135deg, rgba(28, 14, 24, 0.75) 0%, rgba(14, 8, 18, 0.88) 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1.5px solid rgba(255, 85, 0, 0.4);
-  box-shadow: 
-    0 16px 40px 0 rgba(0, 0, 0, 0.7),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.15),
-    0 0 25px 0 rgba(255, 85, 0, 0.15);
+    0 10px 30px -5px rgba(0, 0, 0, 0.05),
+    0 4px 12px -2px rgba(0, 0, 0, 0.03),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
 }
 
 .glass-panel-hover {
-  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-panel-hover:hover {
-  background: linear-gradient(135deg, rgba(18, 30, 56, 0.85) 0%, rgba(12, 20, 38, 0.95) 100%);
-  border-color: rgba(0, 240, 255, 0.75);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 107, 0, 0.4);
   box-shadow: 
-    0 20px 50px 0 rgba(0, 240, 255, 0.25),
-    inset 0 1px 2px 0 rgba(255, 255, 255, 0.3);
-  transform: translateY(-4px) scale(1.01);
+    0 16px 40px -8px rgba(255, 107, 0, 0.12),
+    0 8px 20px -4px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
 }
 
-/* Futuristic Glowing Buttons */
-.glass-button-cyan {
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.9) 0%, rgba(0, 136, 255, 0.95) 100%);
-  color: #000000;
-  font-weight: 900;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 30px rgba(0, 240, 255, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.6);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-button-cyan:hover {
-  box-shadow: 0 0 50px rgba(0, 240, 255, 1), inset 0 1px 2px rgba(255, 255, 255, 0.8);
-  transform: translateY(-2px) scale(1.03);
-}
-
+/* Minimalist Glass Buttons */
 .glass-button-orange {
-  background: linear-gradient(135deg, rgba(255, 85, 0, 0.95) 0%, rgba(255, 140, 0, 0.95) 100%);
+  background: linear-gradient(135deg, #FF6B00 0%, #FF8800 100%);
   color: #FFFFFF;
-  font-weight: 900;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 30px rgba(255, 85, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.4);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 700;
+  box-shadow: 0 4px 18px rgba(255, 107, 0, 0.35);
+  transition: all 0.2s ease;
 }
 
 .glass-button-orange:hover {
-  box-shadow: 0 0 50px rgba(255, 85, 0, 1), inset 0 1px 2px rgba(255, 255, 255, 0.6);
-  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 24px rgba(255, 107, 0, 0.5);
+  transform: translateY(-1px);
 }
 
-.glass-button-secondary {
-  background: rgba(255, 255, 255, 0.07);
-  border: 1.5px solid rgba(0, 240, 255, 0.4);
+.glass-button-cyan {
+  background: linear-gradient(135deg, #00B4D8 0%, #0077B6 100%);
   color: #FFFFFF;
-  backdrop-filter: blur(16px);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
-  transition: all 0.25s ease;
+  font-weight: 700;
+  box-shadow: 0 4px 18px rgba(0, 180, 216, 0.35);
+  transition: all 0.2s ease;
 }
 
-.glass-button-secondary:hover {
-  background: rgba(0, 240, 255, 0.18);
-  border-color: rgba(0, 240, 255, 0.9);
-  box-shadow: 0 0 25px rgba(0, 240, 255, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+.glass-button-cyan:hover {
+  box-shadow: 0 6px 24px rgba(0, 180, 216, 0.5);
+  transform: translateY(-1px);
 }
 
-/* Sci-Fi Glow Text */
-.text-shadow-glow {
-  text-shadow: 0 0 20px rgba(0, 240, 255, 0.9), 0 0 40px rgba(0, 240, 255, 0.4);
+.glass-button-secondary-light {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  color: #1E293B;
+  transition: all 0.2s ease;
 }
 
-.text-shadow-glow-orange {
-  text-shadow: 0 0 20px rgba(255, 85, 0, 0.9), 0 0 40px rgba(255, 85, 0, 0.4);
+.glass-button-secondary-light:hover {
+  background: #FFFFFF;
+  border-color: #FF6B00;
+  color: #FF6B00;
+  box-shadow: 0 4px 14px rgba(255, 107, 0, 0.15);
 }
 
-/* Cyber Matrix Background Grid */
-.bg-cyber-grid {
+/* Background Cyber Grid Effect Light */
+.bg-cyber-grid-light {
   background-image: 
-    linear-gradient(rgba(0, 240, 255, 0.08) 1.5px, transparent 1.5px),
-    linear-gradient(90deg, rgba(0, 240, 255, 0.08) 1.5px, transparent 1.5px);
-  background-size: 36px 36px;
+    linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-/* Custom Futuristic Scrollbar */
+/* Custom Clean Scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(3, 7, 18, 0.95);
+  background: rgba(241, 245, 249, 0.8);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #00F0FF 0%, #FF5500 100%);
+  background: rgba(203, 213, 225, 0.9);
   border-radius: 4px;
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00F0FF;
+  background: #FF6B00;
 }
