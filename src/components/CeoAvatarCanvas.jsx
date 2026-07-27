@@ -7,166 +7,119 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    let animationFrameId;
-    let angle = 0;
-    let hudAngle = 0;
+    let raf;
+    const SIZE = 220;
+    canvas.width = SIZE;
+    canvas.height = SIZE;
 
-    const resize = () => {
-      const parent = canvas.parentElement;
-      if (parent) {
-        canvas.width = parent.clientWidth || 340;
-        canvas.height = parent.clientHeight || 340;
-      }
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const particles = Array.from({ length: 50 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      radius: Math.random() * 2.5 + 1.2,
-      speedX: (Math.random() - 0.5) * 1.4,
-      speedY: (Math.random() - 0.5) * 1.4,
-    }));
+    const cx = SIZE / 2;
+    const cy = SIZE / 2;
+    let t = 0;
 
     const render = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      t += 0.02;
+      ctx.clearRect(0, 0, SIZE, SIZE);
 
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const baseRadius = Math.min(centerX, centerY) * 0.42;
+      // Outer glow ring
+      const baseR = 80;
+      const pulseR = baseR + (isSpeaking ? Math.sin(t * 3) * 12 : isListening ? Math.sin(t * 2) * 6 : 0);
+      const ringColor = isListening ? '#06b6d4' : isSpeaking ? '#f97316' : '#f97316';
 
-      particles.forEach(p => {
-        p.x += p.speedX * (isSpeaking ? 2 : 1);
-        p.y += p.speedY * (isSpeaking ? 2 : 1);
-
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = isListening ? 'rgba(0, 180, 216, 0.7)' : isSpeaking ? 'rgba(255, 107, 0, 0.8)' : 'rgba(255, 140, 0, 0.5)';
-        ctx.fill();
-      });
-
-      let pulseMultiplier = 1;
-      if (isSpeaking) {
-        pulseMultiplier = 1 + Math.sin(Date.now() * 0.018) * 0.14;
-      } else if (isListening) {
-        pulseMultiplier = 1 + Math.sin(Date.now() * 0.024) * 0.09;
-      } else if (isThinking) {
-        pulseMultiplier = 1 + Math.sin(Date.now() * 0.038) * 0.12;
-      }
-
-      const currentRadius = baseRadius * pulseMultiplier;
-
-      const coreGrad = ctx.createRadialGradient(
-        centerX, centerY, 6,
-        centerX, centerY, currentRadius * 1.75
-      );
-
-      if (isSpeaking) {
-        coreGrad.addColorStop(0, '#FFFFFF');
-        coreGrad.addColorStop(0.3, '#FFB703');
-        coreGrad.addColorStop(0.7, '#FF6B00');
-        coreGrad.addColorStop(1, 'rgba(255, 107, 0, 0)');
-      } else if (isListening) {
-        coreGrad.addColorStop(0, '#FFFFFF');
-        coreGrad.addColorStop(0.3, '#48CAE4');
-        coreGrad.addColorStop(0.7, '#0077B6');
-        coreGrad.addColorStop(1, 'rgba(0, 119, 182, 0)');
-      } else if (isThinking) {
-        coreGrad.addColorStop(0, '#FFFFFF');
-        coreGrad.addColorStop(0.3, '#C084FC');
-        coreGrad.addColorStop(0.7, '#7C3AED');
-        coreGrad.addColorStop(1, 'rgba(124, 58, 237, 0)');
-      } else {
-        coreGrad.addColorStop(0, '#FFFFFF');
-        coreGrad.addColorStop(0.35, '#FF8800');
-        coreGrad.addColorStop(0.8, '#E05300');
-        coreGrad.addColorStop(1, 'rgba(224, 83, 0, 0)');
-      }
-
+      // Glow
+      const grd = ctx.createRadialGradient(cx, cy, 20, cx, cy, pulseR + 30);
+      grd.addColorStop(0, isListening ? 'rgba(6,182,212,0.3)' : 'rgba(249,115,22,0.25)');
+      grd.addColorStop(1, 'transparent');
       ctx.beginPath();
-      ctx.arc(centerX, centerY, currentRadius * 1.65, 0, Math.PI * 2);
-      ctx.fillStyle = coreGrad;
+      ctx.arc(cx, cy, pulseR + 30, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
       ctx.fill();
 
-      hudAngle += isSpeaking ? 0.05 : 0.02;
-
-      ctx.save();
-      ctx.translate(centerX, centerY);
-      ctx.rotate(-hudAngle);
+      // Inner circle
+      const innerGrd = ctx.createRadialGradient(cx - 10, cy - 10, 5, cx, cy, 62);
+      innerGrd.addColorStop(0, isListening ? '#0e7490' : '#7c2d12');
+      innerGrd.addColorStop(0.5, isListening ? '#0c4a6e' : '#431407');
+      innerGrd.addColorStop(1, '#0a0a0a');
       ctx.beginPath();
-      ctx.arc(0, 0, currentRadius * 1.55, 0, Math.PI * 2);
-      ctx.setLineDash([10, 14]);
-      ctx.strokeStyle = isListening ? 'rgba(0, 180, 216, 0.7)' : 'rgba(255, 107, 0, 0.7)';
-      ctx.lineWidth = 2.2;
+      ctx.arc(cx, cy, 62, 0, Math.PI * 2);
+      ctx.fillStyle = innerGrd;
+      ctx.fill();
+
+      // Ring dash
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(t * 0.8);
+      ctx.beginPath();
+      ctx.arc(0, 0, pulseR, 0, Math.PI * 2);
+      ctx.setLineDash([6, 8]);
+      ctx.strokeStyle = `${ringColor}88`;
+      ctx.lineWidth = 1.5;
       ctx.stroke();
       ctx.restore();
 
-      const numBars = 44;
-      for (let b = 0; b < numBars; b++) {
-        const barAngle = (b / numBars) * Math.PI * 2;
-        let barHeight = 8;
+      // Outer static ring
+      ctx.beginPath();
+      ctx.arc(cx, cy, baseR + 18, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([]);
+      ctx.stroke();
 
-        if (isSpeaking) {
-          barHeight = Math.sin(Date.now() * 0.016 + b * 0.6) * 26 + 18;
-        } else if (isListening) {
-          barHeight = Math.sin(Date.now() * 0.02 + b * 0.5) * 12 + 10;
+      // Audio bars (only when speaking or listening)
+      if (isSpeaking || isListening) {
+        const bars = 36;
+        for (let i = 0; i < bars; i++) {
+          const angle = (i / bars) * Math.PI * 2;
+          const amp = isSpeaking
+            ? Math.abs(Math.sin(t * 4 + i * 0.5)) * 22 + 6
+            : Math.abs(Math.sin(t * 2 + i * 0.4)) * 10 + 4;
+          const r1 = pulseR + 2;
+          const r2 = r1 + amp;
+          ctx.beginPath();
+          ctx.moveTo(cx + Math.cos(angle) * r1, cy + Math.sin(angle) * r1);
+          ctx.lineTo(cx + Math.cos(angle) * r2, cy + Math.sin(angle) * r2);
+          ctx.strokeStyle = isListening ? '#06b6d4' : i % 2 === 0 ? '#f97316' : '#fb923c';
+          ctx.lineWidth = 2;
+          ctx.stroke();
         }
-
-        const x1 = centerX + Math.cos(barAngle) * (currentRadius * 1.14);
-        const y1 = centerY + Math.sin(barAngle) * (currentRadius * 1.14);
-        const x2 = centerX + Math.cos(barAngle) * (currentRadius * 1.14 + barHeight);
-        const y2 = centerY + Math.sin(barAngle) * (currentRadius * 1.14 + barHeight);
-
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        
-        ctx.strokeStyle = isSpeaking 
-          ? (b % 2 === 0 ? '#FFB703' : '#FF6B00')
-          : isListening 
-          ? '#00B4D8' 
-          : '#FF6B00';
-
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
       }
 
+      // Thinking spinner
+      if (isThinking) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(t * 2);
+        ctx.beginPath();
+        ctx.arc(0, 0, pulseR + 5, 0, Math.PI * 1.6);
+        ctx.strokeStyle = '#a855f7';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([]);
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // CEO Text
       ctx.save();
-      ctx.font = '900 24px Orbitron, sans-serif';
-      ctx.fillStyle = '#0F172A';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('CEO', centerX, centerY - 4);
-
-      ctx.font = '800 11px Inter, sans-serif';
-      ctx.fillStyle = isListening ? '#0077B6' : isSpeaking ? '#E05300' : '#FF6B00';
-      ctx.fillText(
-        isSpeaking ? '● VOICE ACTIVE' : isListening ? '● LISTENING...' : isThinking ? '● ANALYZING...' : 'Er. Orange B',
-        centerX,
-        centerY + 18
-      );
+      ctx.font = '700 18px Inter, sans-serif';
+      ctx.fillStyle = '#f5f5f5';
+      ctx.fillText('OF', cx, cy - 8);
+      ctx.font = '500 10px Inter, sans-serif';
+      ctx.fillStyle = isSpeaking ? '#f97316' : isListening ? '#06b6d4' : isThinking ? '#a855f7' : '#71717a';
+      ctx.fillText(isSpeaking ? 'SPEAKING' : isListening ? 'LISTENING' : isThinking ? 'THINKING' : 'READY', cx, cy + 10);
       ctx.restore();
 
-      animationFrameId = requestAnimationFrame(render);
+      raf = requestAnimationFrame(render);
     };
 
     render();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      cancelAnimationFrame(animationFrameId);
-    };
+    return () => cancelAnimationFrame(raf);
   }, [isSpeaking, isListening, isThinking]);
 
   return (
-    <div className="relative w-full h-72 md:h-80 flex items-center justify-center">
-      <canvas ref={canvasRef} className="w-full h-full cursor-pointer" />
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 0' }}>
+      <canvas ref={canvasRef} style={{ width: 220, height: 220 }} />
     </div>
   );
 }

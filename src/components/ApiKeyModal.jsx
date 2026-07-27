@@ -1,102 +1,120 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Key, Check, ExternalLink, Sparkles } from 'lucide-react';
+import { X, Key, Check, ExternalLink, Sparkles, Zap } from 'lucide-react';
 
 export default function ApiKeyModal({ isOpen, onClose, apiKey, onSaveApiKey }) {
   const [tempKey, setTempKey] = useState(apiKey || '');
-  const [savedSuccess, setSavedSuccess] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSave = (e) => {
+  const handleSave = e => {
     e.preventDefault();
     onSaveApiKey(tempKey.trim());
-    setSavedSuccess(true);
-    setTimeout(() => {
-      setSavedSuccess(false);
-      onClose();
-    }, 1200);
+    setSaved(true);
+    setTimeout(() => { setSaved(false); onClose(); }, 1200);
   };
 
   return createPortal(
-    <div 
-      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+    <div
+      onClick={e => e.target === e.currentTarget && onClose()}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 99999,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+        background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(12px)',
       }}
     >
-      <div className="relative w-full max-w-md bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto text-slate-900 z-[100000]">
+      <div className="glass" style={{ width: '100%', maxWidth: 440, borderRadius: 24, padding: 28, position: 'relative' }}>
         
-        {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 pb-4 mb-4">
-          <div className="flex items-center space-x-2.5">
-            <div className="p-2 bg-orange-100 rounded-xl border border-orange-200 shrink-0">
-              <Key className="w-5 h-5 text-orange-600" />
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: 10,
+              background: 'rgba(249,115,22,0.12)', border: '1px solid rgba(249,115,22,0.25)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Zap size={16} style={{ color: '#f97316' }} />
             </div>
-            <h3 className="font-orbitron font-bold text-base text-slate-900">AI Model API Key</h3>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#f5f5f5', letterSpacing: -0.3 }}>Gemini API Key</div>
+              <div style={{ fontSize: 11, color: '#71717a', fontFamily: 'monospace' }}>Saved only in your browser</div>
+            </div>
           </div>
-          <button 
+          <button
             onClick={onClose}
-            className="p-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition active:scale-95 touch-manipulation"
+            style={{
+              width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer',
+              background: 'rgba(255,255,255,0.05)', color: '#71717a',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = '#f5f5f5'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#71717a'; }}
           >
-            <X className="w-5 h-5" />
+            <X size={15} />
           </button>
         </div>
 
-        {/* Modal Description */}
-        <p className="text-xs text-slate-600 leading-relaxed mb-4 font-medium">
-          Connect your free <strong>Google Gemini API key</strong> for unlimited open-domain LLM responses from Er. Orange B AI CEO.
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 20 }} />
+
+        <p style={{ fontSize: 13, color: '#a1a1aa', lineHeight: 1.65, marginBottom: 20 }}>
+          Add your free <strong style={{ color: '#f5f5f5' }}>Google Gemini API key</strong> to power Er. Orange B with real-time AI responses. Without it, the built-in CEO Knowledge Engine responds automatically.
         </p>
 
-        <form onSubmit={handleSave} className="space-y-4">
+        <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Google Gemini API Key</label>
+            <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#71717a', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8, fontFamily: 'monospace' }}>
+              API Key
+            </label>
             <input
+              className="input-field"
               type="text"
               value={tempKey}
-              onChange={(e) => setTempKey(e.target.value)}
+              onChange={e => setTempKey(e.target.value)}
               placeholder="AIzaSy..."
-              className="w-full bg-slate-50 border border-slate-300 focus:border-orange-500 rounded-2xl px-4 py-3.5 text-xs text-slate-900 placeholder-slate-400 outline-none font-mono shadow-sm"
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
             />
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-slate-500 font-medium">
-            <a 
-              href="https://aistudio.google.com/app/apikey" 
-              target="_blank" 
-              rel="noreferrer"
-              className="text-orange-600 hover:underline flex items-center gap-1 font-bold p-1"
-            >
-              Get Free Gemini API Key <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-            <span>Saved locally in browser</span>
+          <a
+            href="https://aistudio.google.com/app/apikey"
+            target="_blank"
+            rel="noreferrer"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#f97316', fontWeight: 600, textDecoration: 'none' }}
+          >
+            Get a free Gemini API key <ExternalLink size={11} />
+          </a>
+
+          <div style={{
+            padding: '12px 14px', borderRadius: 12,
+            background: 'rgba(249,115,22,0.06)', border: '1px solid rgba(249,115,22,0.15)',
+            fontSize: 12, color: '#a1a1aa', lineHeight: 1.6,
+          }}>
+            🔒 Your key is stored in <code style={{ color: '#f97316', fontFamily: 'monospace' }}>localStorage</code> only — never sent to our servers.
           </div>
 
-          <div className="p-3 bg-orange-50 border border-orange-200 rounded-2xl text-[11px] text-orange-700 font-medium leading-relaxed">
-            <strong>Note:</strong> If no API key is provided, the platform automatically utilizes the built-in Er. Orange B Knowledge Engine for zero-setup answers.
-          </div>
-
-          <div className="pt-2 flex items-center justify-end space-x-3">
+          <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', paddingTop: 4 }}>
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-3 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition active:scale-95"
+              className="btn-ghost"
+              style={{ padding: '10px 20px', borderRadius: 10, fontSize: 13, fontFamily: 'inherit' }}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="glass-button-orange px-6 py-3 rounded-xl text-xs font-bold text-white flex items-center gap-1.5 shadow-md active:scale-95 touch-manipulation"
+              className="btn-orange"
+              style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '10px 22px', borderRadius: 10, fontSize: 13, fontFamily: 'inherit' }}
             >
-              {savedSuccess ? <Check className="w-4 h-4 text-white" /> : <Sparkles className="w-4 h-4 text-yellow-300" />}
-              {savedSuccess ? 'Saved!' : 'Save Key'}
+              {saved ? <Check size={14} /> : <Sparkles size={14} />}
+              {saved ? 'Saved!' : 'Save Key'}
             </button>
           </div>
         </form>
-
       </div>
     </div>,
     document.body

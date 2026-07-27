@@ -1,387 +1,356 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Mic, MicOff, Volume2, VolumeX, Send, Sparkles, RefreshCw, 
-  Bot, User, Radio, Cpu, Award, HelpCircle, Layers, Zap, Activity
-} from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Mic, MicOff, Send, VolumeX, Volume2, RefreshCw, Sparkles, User, Zap, Radio } from 'lucide-react';
 import CeoAvatarCanvas from './CeoAvatarCanvas';
 import { askCeoAI } from '../services/aiCeoService';
 import { speechManager } from '../services/speechService';
 
+const INITIAL_MSG = {
+  id: 1,
+  sender: 'ceo',
+  text: "Hello. I'm Er. Orange B, CEO of Orange Future Tech. How can I assist you today? Feel free to type or use voice.",
+  ts: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+};
+
 export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercelModal }) {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: 'ceo',
-      text: "Greetings. I am Er. Orange B, CEO of Orange Future Tech. Welcome to ai.orangefuturetech.com. Speak or type to discuss our software solutions, hardware systems, or enterprise AI strategy.",
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }
-  ]);
-  const [inputText, setInputText] = useState('');
+  const [messages, setMessages] = useState([INITIAL_MSG]);
+  const [input, setInput] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
-  const [voiceToVoiceMode, setVoiceToVoiceMode] = useState(false);
-  const [sttTranscript, setSttTranscript] = useState('');
-  const [autoSpeechEnabled, setAutoSpeechEnabled] = useState(true);
+  const [voiceLoop, setVoiceLoop] = useState(false);
+  const [liveTranscript, setLiveTranscript] = useState('');
+  const [autoSpeak, setAutoSpeak] = useState(true);
+  const bottomRef = useRef(null);
 
-  const messagesEndRef = useRef(null);
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, isThinking]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, sttTranscript, isThinking]);
-
-  const handleSpeakCeo = (text) => {
-    if (!autoSpeechEnabled) return;
+  const speakText = (text) => {
+    if (!autoSpeak) return;
     setIsSpeaking(true);
-    speechManager.speak(
-      text,
-      () => setIsSpeaking(true),
-      () => {
-        setIsSpeaking(false);
-        if (voiceToVoiceMode) {
-          setTimeout(() => {
-            toggleListening(true);
-          }, 400);
-        }
-      }
-    );
+    speechManager.speak(text, () => setIsSpeaking(true), () => {
+      setIsSpeaking(false);
+      if (voiceLoop) setTimeout(() => startListen(true), 400);
+    });
   };
 
-  const handleSendMessage = async (textToSend) => {
-    const query = textToSend || inputText;
-    if (!query.trim()) return;
-
-    const userMsg = {
-      id: Date.now(),
-      sender: 'user',
-      text: query,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    setMessages(prev => [...prev, userMsg]);
-    setInputText(''); // Clear text bar when text message is submitted
-    setSttTranscript('');
+  const sendMessage = async (text) => {
+    const q = (text || input).trim();
+    if (!q) return;
+    setMessages(prev => [...prev, { id: Date.now(), sender: 'user', text: q, ts: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]);
+    setInput('');
+    setLiveTranscript('');
     setIsThinking(true);
     speechManager.stopSpeaking();
 
-    if (query.toLowerCase().includes("id card") || query.toLowerCase().includes("badge")) {
-      setTimeout(() => {
-        onSelectIdCardTab();
-      }, 1000);
-    }
-    if (query.toLowerCase().includes("vercel") || query.toLowerCase().includes("host") || query.toLowerCase().includes("domain")) {
-      setTimeout(() => {
-        onSelectVercelModal();
-      }, 1500);
-    }
+    if (q.toLowerCase().includes('id card') || q.toLowerCase().includes('badge')) onSelectIdCardTab();
+    if (q.toLowerCase().includes('vercel') || q.toLowerCase().includes('host') || q.toLowerCase().includes('domain')) onSelectVercelModal();
 
     try {
-      const ceoAnswer = await askCeoAI(query, apiKey);
-      const ceoMsg = {
-        id: Date.now() + 1,
-        sender: 'ceo',
-        text: ceoAnswer,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages(prev => [...prev, ceoMsg]);
+      const answer = await askCeoAI(q, apiKey);
+      setMessages(prev => [...prev, { id: Date.now() + 1, sender: 'ceo', text: answer, ts: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]);
       setIsThinking(false);
-
-      handleSpeakCeo(ceoAnswer);
-    } catch (err) {
-      console.error(err);
+      speakText(answer);
+    } catch {
       setIsThinking(false);
     }
   };
 
-  const toggleListening = (forceStart = false) => {
-    if (isListening && !forceStart) {
-      speechManager.stopListening();
-      setIsListening(false);
-      return;
-    }
-
+  const startListen = (force = false) => {
+    if (isListening && !force) { speechManager.stopListening(); setIsListening(false); return; }
     setIsListening(true);
-    setSttTranscript('');
-    
-    // Voice STT stays in sttTranscript and does NOT fill or overwrite inputText field!
+    setLiveTranscript('');
     speechManager.startListening(
-      (transcript, isFinal) => {
-        setSttTranscript(transcript);
-        if (isFinal && transcript.trim().length > 0) {
-          setIsListening(false);
-          handleSendMessage(transcript);
-        }
+      (t, isFinal) => {
+        setLiveTranscript(t);
+        if (isFinal && t.trim()) { setIsListening(false); sendMessage(t); }
       },
-      (error) => {
-        console.warn("STT Error:", error);
-        setIsListening(false);
-      },
-      () => {
-        setIsListening(false);
-      }
+      () => setIsListening(false),
+      () => setIsListening(false),
     );
   };
 
-  const stopAllAudio = () => {
-    speechManager.stopSpeaking();
-    speechManager.stopListening();
-    setIsSpeaking(false);
-    setIsListening(false);
-  };
+  const PROMPTS = [
+    { emoji: '🏢', label: 'Introduce company', q: 'Tell me about Orange Future Tech and your services.' },
+    { emoji: '🚀', label: 'Vercel deploy', q: 'How do I deploy to ai.orangefuturetech.com on Vercel?' },
+    { emoji: '⚡', label: 'Our solutions', q: 'What hardware, software, and AI solutions do you offer?' },
+    { emoji: '🪪', label: 'ID card', q: 'Generate an Executive ID Card for me' },
+  ];
 
   return (
-    <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-      
-      {/* Left Column: Holographic CEO Avatar & Glass Profile */}
-      <div className="lg:col-span-5 glass-panel-light rounded-3xl p-6 flex flex-col items-center justify-between shadow-xl relative overflow-hidden">
-        
-        {/* Header Telemetry */}
-        <div className="w-full flex items-center justify-between border-b border-slate-200/80 pb-4 mb-2">
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-orange-500 animate-pulse" />
-            <span className="font-orbitron text-xs tracking-wider text-slate-800 font-bold uppercase">
-              AI CEO EXECUTIVE CORE
-            </span>
-          </div>
-          <span className="text-xs bg-orange-50 border border-orange-200 text-orange-600 px-3 py-1 rounded-full font-mono font-bold flex items-center gap-1 shadow-sm">
-            <Radio className="w-3.5 h-3.5 text-orange-500 animate-pulse" /> ai.orangefuturetech.com
+    <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 20, alignItems: 'start', height: 'calc(100vh - 128px)', minHeight: 560 }}>
+
+      {/* LEFT: Avatar Panel */}
+      <div className="glass" style={{ display: 'flex', flexDirection: 'column', gap: 20, padding: 24, height: '100%' }}>
+
+        {/* Status tag */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span className="tag tag-orange">AI CEO</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#71717a', fontFamily: 'monospace' }}>
+            <Radio size={11} style={{ color: isSpeaking ? '#f97316' : isListening ? '#06b6d4' : '#22c55e' }} />
+            {isSpeaking ? 'Speaking' : isListening ? 'Listening' : isThinking ? 'Thinking' : 'Ready'}
           </span>
         </div>
 
-        {/* Dynamic Canvas Avatar */}
+        {/* Avatar Canvas */}
         <CeoAvatarCanvas isSpeaking={isSpeaking} isListening={isListening} isThinking={isThinking} />
 
-        {/* CEO Identity Info */}
-        <div className="text-center my-3">
-          <h2 className="text-2xl font-black font-orbitron text-slate-900 flex items-center justify-center gap-2">
-            Er. Orange B <Award className="w-5 h-5 text-orange-500" />
-          </h2>
-          <p className="text-xs text-orange-600 font-mono font-bold tracking-wide mt-1">Chief Executive Officer | Orange Future Tech</p>
-          
-          <div className="flex items-center justify-center gap-2 mt-2">
-            <span className={`text-xs font-mono font-bold uppercase px-4 py-1 rounded-full border shadow-sm ${
-              isSpeaking ? 'bg-orange-100 text-orange-700 border-orange-300 animate-pulse' :
-              isListening ? 'bg-cyan-100 text-cyan-700 border-cyan-300 animate-pulse' :
-              isThinking ? 'bg-purple-100 text-purple-700 border-purple-300 animate-pulse' :
-              'bg-emerald-50 text-emerald-700 border-emerald-300'
-            }`}>
-              {isSpeaking ? '🔊 VOICE ACTIVE' : isListening ? '🎙️ LISTENING...' : isThinking ? '⚡ ANALYZING...' : '● EXECUTIVE READY'}
-            </span>
+        {/* CEO identity */}
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 22, fontWeight: 800, color: '#f5f5f5', letterSpacing: -0.5 }}>Er. Orange B</div>
+          <div style={{ fontSize: 12, color: '#f97316', fontFamily: 'monospace', marginTop: 4 }}>
+            Chief Executive Officer · Orange Future Tech
           </div>
         </div>
 
-        {/* Voice Equalizer Bar when Speaking */}
+        {/* Voice Equalizer when speaking */}
         {isSpeaking && (
-          <div className="w-full flex items-center justify-center space-x-1.5 py-2">
-            {[40, 75, 35, 95, 55, 85, 45, 100, 65, 35].map((h, idx) => (
-              <div 
-                key={idx}
-                style={{ height: `${h * 0.26}px`, animationDelay: `${idx * 0.1}s` }}
-                className="w-1.5 bg-gradient-to-t from-orange-500 to-amber-400 rounded-full animate-wave-bar"
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 3, height: 32 }}>
+            {[0.2, 0.7, 0.4, 1, 0.6, 0.9, 0.3, 0.8, 0.5, 0.7, 0.2, 0.6].map((h, i) => (
+              <div
+                key={i}
+                className="wave-bar"
+                style={{
+                  width: 3, height: 32, borderRadius: 99,
+                  background: `linear-gradient(to top, #f97316, #fb923c)`,
+                  animationDelay: `${i * 0.07}s`,
+                  animationDuration: `${0.5 + h * 0.5}s`,
+                }}
               />
             ))}
           </div>
         )}
 
-        {/* Voice Loop & Mute Options */}
-        <div className="w-full space-y-3 pt-3 border-t border-slate-200/80">
-          
-          <div className="flex items-center justify-between bg-slate-100/80 p-3 rounded-2xl border border-slate-200 shadow-inner">
-            <div className="flex items-center gap-2.5">
-              <div className="p-1.5 bg-orange-100 rounded-lg">
-                <Zap className="w-4 h-4 text-orange-600" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-slate-800 font-orbitron">Continuous Voice Loop</p>
-                <p className="text-[10px] text-slate-500 font-mono">Auto-listen after CEO responds</p>
-              </div>
-            </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input 
-                type="checkbox" 
-                checked={voiceToVoiceMode}
-                onChange={(e) => setVoiceToVoiceMode(e.target.checked)}
-                className="sr-only peer"
-              />
-              <div className="w-10 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-orange-500"></div>
-            </label>
+        {/* Live transcript */}
+        {liveTranscript && (
+          <div style={{
+            padding: '10px 14px', borderRadius: 10,
+            background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.2)',
+            fontSize: 12, color: '#67e8f9', fontFamily: 'monospace', lineHeight: 1.5,
+          }}>
+            🎙 {liveTranscript}
           </div>
+        )}
 
-          {/* Live Voice STT Floating Speech Banner */}
-          {sttTranscript && (
-            <div className="p-3 bg-cyan-50 border border-cyan-200 rounded-xl text-xs text-cyan-900 shadow-md animate-fadeIn font-mono">
-              <span className="font-bold text-cyan-600">🎙️ Spoken Voice: </span>"{sttTranscript}"
-            </div>
-          )}
-
+        {/* Voice Loop Toggle */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '12px 14px', borderRadius: 12,
+          background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: '#f5f5f5' }}>Continuous Voice</div>
+            <div style={{ fontSize: 11, color: '#71717a', marginTop: 2 }}>Auto-listen after CEO replies</div>
+          </div>
+          <label className="toggle">
+            <input type="checkbox" checked={voiceLoop} onChange={e => setVoiceLoop(e.target.checked)} />
+            <span className="toggle-slider" />
+          </label>
         </div>
+
+        {/* Mute Toggle */}
+        <button
+          onClick={() => setAutoSpeak(p => !p)}
+          className="btn-ghost"
+          style={{
+            width: '100%', padding: '10px', borderRadius: 10,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            fontSize: 13, fontFamily: 'inherit',
+          }}
+        >
+          {autoSpeak ? <Volume2 size={15} style={{ color: '#f97316' }} /> : <VolumeX size={15} />}
+          {autoSpeak ? 'Voice Output On' : 'Voice Output Off'}
+        </button>
       </div>
 
-      {/* Right Column: Glassmorphism White Minimalist Terminal */}
-      <div className="lg:col-span-7 glass-panel-light rounded-3xl p-6 flex flex-col h-[610px] shadow-xl relative">
-        
-        {/* Terminal Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-200/80 mb-4">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 bg-orange-500/10 rounded-xl border border-orange-200">
-              <Bot className="w-6 h-6 text-orange-600" />
-            </div>
-            <div>
-              <h3 className="font-orbitron font-bold text-slate-900 text-base">CEO Strategic Terminal</h3>
-              <p className="text-xs text-orange-600 font-mono font-bold">Er. Orange B Executive Console</p>
-            </div>
+      {/* RIGHT: Chat Panel */}
+      <div className="glass" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+
+        {/* Chat Header */}
+        <div style={{
+          padding: '16px 20px',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <div>
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#f5f5f5', letterSpacing: -0.3 }}>CEO Strategic Console</div>
+            <div style={{ fontSize: 11, color: '#71717a', fontFamily: 'monospace', marginTop: 2 }}>Er. Orange B · ai.orangefuturetech.com</div>
           </div>
-
-          <div className="flex items-center space-x-2">
+          <div style={{ display: 'flex', gap: 8 }}>
             <button
-              onClick={stopAllAudio}
-              className="text-xs text-slate-600 hover:text-orange-600 flex items-center gap-1 font-mono transition bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl border border-slate-200 font-bold"
-              title="Stop Speech"
+              onClick={() => { speechManager.stopSpeaking(); setIsSpeaking(false); }}
+              className="btn-ghost"
+              style={{ padding: '6px 12px', borderRadius: 8, fontSize: 12, fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 5 }}
             >
-              {isSpeaking ? <VolumeX className="w-3.5 h-3.5 text-orange-600" /> : <Volume2 className="w-3.5 h-3.5 text-slate-600" />}
-              <span>{isSpeaking ? 'Mute' : 'Audio'}</span>
+              <VolumeX size={12} /> Mute
             </button>
-
             <button
-              onClick={() => setMessages([messages[0]])}
-              className="text-xs text-slate-600 hover:text-slate-900 flex items-center gap-1 font-mono transition bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl border border-slate-200 font-bold"
-              title="Reset Terminal"
+              onClick={() => { setMessages([INITIAL_MSG]); speechManager.stopSpeaking(); }}
+              className="btn-ghost"
+              style={{ padding: '6px 12px', borderRadius: 8, fontSize: 12, fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 5 }}
             >
-              <RefreshCw className="w-3.5 h-3.5" /> Clear
+              <RefreshCw size={12} /> Clear
             </button>
           </div>
         </div>
 
-        {/* Message Log */}
-        <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+        {/* Message List */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
           {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              {msg.sender === 'ceo' && (
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-500 flex items-center justify-center text-white text-xs font-bold font-orbitron shrink-0 shadow-md">
-                  CEO
-                </div>
-              )}
-              
-              <div
-                className={`max-w-[85%] rounded-2xl p-4 text-sm leading-relaxed ${
-                  msg.sender === 'user'
-                    ? 'bg-slate-900 text-white font-medium rounded-br-none shadow-md'
-                    : 'bg-white border border-slate-200/90 text-slate-800 rounded-bl-none shadow-sm font-medium'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-4 mb-1.5">
-                  <span className={`text-[11px] font-mono font-bold uppercase tracking-wider ${
-                    msg.sender === 'user' ? 'text-orange-400' : 'text-orange-600'
-                  }`}>
-                    {msg.sender === 'user' ? 'Executive Visitor' : 'Er. Orange B (CEO)'}
-                  </span>
-                  <span className={`text-[10px] font-mono ${msg.sender === 'user' ? 'text-slate-400' : 'text-slate-400'}`}>{msg.timestamp}</span>
-                </div>
-                
-                <p className="whitespace-pre-wrap">{msg.text}</p>
+            <div key={msg.id} className="fade-up" style={{ display: 'flex', gap: 12, justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start' }}>
 
+              {msg.sender === 'ceo' && (
+                <div style={{
+                  width: 32, height: 32, borderRadius: 10, flexShrink: 0,
+                  background: 'linear-gradient(135deg, #f97316, #fb923c)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 10, fontWeight: 800, color: '#fff',
+                  boxShadow: '0 0 16px rgba(249,115,22,0.3)',
+                }}>CEO</div>
+              )}
+
+              <div style={{
+                maxWidth: '78%',
+                padding: '12px 16px',
+                borderRadius: msg.sender === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                background: msg.sender === 'user'
+                  ? 'rgba(249,115,22,0.12)'
+                  : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${msg.sender === 'user' ? 'rgba(249,115,22,0.2)' : 'rgba(255,255,255,0.07)'}`,
+              }}>
+                <div style={{ fontSize: 11, color: msg.sender === 'user' ? '#fb923c' : '#71717a', fontFamily: 'monospace', marginBottom: 6, display: 'flex', justifyContent: 'space-between', gap: 16 }}>
+                  <span>{msg.sender === 'user' ? 'You' : 'Er. Orange B'}</span>
+                  <span>{msg.ts}</span>
+                </div>
+                <p style={{ fontSize: 14, color: '#e5e5e5', lineHeight: 1.65, whiteSpace: 'pre-wrap', margin: 0 }}>{msg.text}</p>
                 {msg.sender === 'ceo' && (
                   <button
-                    onClick={() => handleSpeakCeo(msg.text)}
-                    className="mt-2.5 text-xs text-orange-600 hover:text-orange-700 flex items-center gap-1.5 font-mono transition bg-orange-50 px-3 py-1 rounded-lg border border-orange-200 font-bold"
+                    onClick={() => speakText(msg.text)}
+                    style={{
+                      marginTop: 10, display: 'flex', alignItems: 'center', gap: 5,
+                      fontSize: 11, color: '#71717a', background: 'none', border: 'none', cursor: 'pointer',
+                      fontFamily: 'inherit', padding: 0, transition: 'color 0.2s',
+                    }}
+                    onMouseEnter={e => e.target.style.color = '#f97316'}
+                    onMouseLeave={e => e.target.style.color = '#71717a'}
                   >
-                    <Volume2 className="w-3.5 h-3.5 text-orange-600" /> Replay Speech
+                    <Volume2 size={11} /> Replay
                   </button>
                 )}
               </div>
 
               {msg.sender === 'user' && (
-                <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center text-white shrink-0 shadow-md">
-                  <User className="w-5 h-5" />
+                <div style={{
+                  width: 32, height: 32, borderRadius: 10, flexShrink: 0,
+                  background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <User size={14} style={{ color: '#a1a1aa' }} />
                 </div>
               )}
             </div>
           ))}
 
+          {/* Thinking indicator */}
           {isThinking && (
-            <div className="flex items-center space-x-3 text-orange-600 text-xs font-mono font-bold p-3 bg-orange-50 rounded-xl border border-orange-200 w-fit">
-              <Sparkles className="w-4 h-4 animate-spin text-orange-600" />
-              <span>Er. Orange B is analyzing query...</span>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-start' }}>
+              <div style={{
+                width: 32, height: 32, borderRadius: 10, flexShrink: 0,
+                background: 'linear-gradient(135deg, #f97316, #fb923c)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 10, fontWeight: 800, color: '#fff',
+              }}>CEO</div>
+              <div style={{
+                padding: '14px 18px', borderRadius: '16px 16px 16px 4px',
+                background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)',
+                display: 'flex', alignItems: 'center', gap: 6,
+              }}>
+                {[0, 0.15, 0.3].map(d => (
+                  <div key={d} style={{
+                    width: 6, height: 6, borderRadius: '50%', background: '#f97316',
+                    animation: 'dotBounce 0.8s ease-in-out infinite',
+                    animationDelay: `${d}s`,
+                  }} />
+                ))}
+              </div>
             </div>
           )}
-          <div ref={messagesEndRef} />
+          <div ref={bottomRef} />
         </div>
 
-        {/* Quick Suggestion Pills */}
-        <div className="py-3 flex items-center gap-2 overflow-x-auto no-scrollbar border-t border-slate-200/80 mt-2">
-          <span className="text-xs uppercase font-mono text-slate-500 font-bold shrink-0">Prompts:</span>
-          <button 
-            onClick={() => handleSendMessage("Introduce yourself and Orange Future Tech")}
-            className="text-xs text-slate-700 font-semibold bg-white hover:bg-orange-50 border border-slate-300 hover:border-orange-400 px-3.5 py-1.5 rounded-full whitespace-nowrap transition shadow-sm"
-          >
-            🏢 Introduce Company
-          </button>
-          <button 
-            onClick={() => handleSendMessage("How do I deploy this app to ai.orangefuturetech.com on Vercel?")}
-            className="text-xs text-slate-700 font-semibold bg-white hover:bg-orange-50 border border-slate-300 hover:border-orange-400 px-3.5 py-1.5 rounded-full whitespace-nowrap transition shadow-sm"
-          >
-            🚀 Vercel Hosting Guide
-          </button>
-          <button 
-            onClick={() => handleSendMessage("What hardware, software, and AI solutions do you build?")}
-            className="text-xs text-slate-700 font-semibold bg-white hover:bg-orange-50 border border-slate-300 hover:border-orange-400 px-3.5 py-1.5 rounded-full whitespace-nowrap transition shadow-sm"
-          >
-            ⚡ Solutions & Products
-          </button>
-          <button 
-            onClick={() => handleSendMessage("Generate an Executive ID Card for me")}
-            className="text-xs text-slate-700 font-semibold bg-white hover:bg-orange-50 border border-slate-300 hover:border-orange-400 px-3.5 py-1.5 rounded-full whitespace-nowrap transition shadow-sm"
-          >
-            🪪 Create ID Card
-          </button>
+        {/* Suggestion Chips */}
+        <div style={{
+          padding: '10px 20px',
+          borderTop: '1px solid rgba(255,255,255,0.04)',
+          display: 'flex', gap: 8, overflowX: 'auto',
+        }}>
+          {PROMPTS.map(p => (
+            <button
+              key={p.label}
+              onClick={() => sendMessage(p.q)}
+              className="btn-ghost"
+              style={{
+                flexShrink: 0, padding: '6px 12px', borderRadius: 8,
+                fontSize: 12, fontFamily: 'inherit', whiteSpace: 'nowrap',
+                display: 'flex', alignItems: 'center', gap: 5,
+              }}
+            >
+              {p.emoji} {p.label}
+            </button>
+          ))}
         </div>
 
-        {/* Text Bar & Push to Talk Microphone Button Next to Input Bar */}
-        <form 
-          onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }} 
-          className="flex items-center gap-2 pt-2"
-        >
+        {/* Input Bar */}
+        <div style={{ padding: '12px 20px 16px', display: 'flex', gap: 10, alignItems: 'center' }}>
           <input
-            type="text"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Type your message to CEO Er. Orange B..."
-            className="flex-1 bg-white border border-slate-300 focus:border-orange-500 rounded-2xl px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition font-medium shadow-sm"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+            placeholder="Ask Er. Orange B anything…"
+            className="input-field"
+            style={{ flex: 1 }}
           />
 
-          {/* PUSH TO TALK MICROPHONE BUTTON RIGHT NEXT TO TEXT BAR */}
+          {/* Mic button */}
           <button
-            type="button"
-            onClick={() => toggleListening()}
-            title="Push to Talk Microphone"
-            className={`p-3.5 rounded-2xl font-bold transition-all shadow-md flex items-center justify-center ${
-              isListening
-                ? 'bg-cyan-500 text-white shadow-[0_0_20px_rgba(0,180,216,0.6)] animate-pulse scale-105'
-                : 'bg-orange-500 text-white hover:bg-orange-600'
-            }`}
+            onClick={() => startListen()}
+            style={{
+              width: 44, height: 44, borderRadius: 11, border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+              background: isListening ? 'rgba(6,182,212,0.15)' : 'rgba(255,255,255,0.05)',
+              outline: `1px solid ${isListening ? 'rgba(6,182,212,0.4)' : 'rgba(255,255,255,0.08)'}`,
+              boxShadow: isListening ? '0 0 20px rgba(6,182,212,0.3)' : 'none',
+              transition: 'all 0.2s',
+              color: isListening ? '#06b6d4' : '#71717a',
+            }}
           >
-            {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5 animate-bounce" />}
+            {isListening ? <MicOff size={18} /> : <Mic size={18} />}
           </button>
 
-          {/* Send Text Button */}
+          {/* Send button */}
           <button
-            type="submit"
-            disabled={!inputText.trim()}
-            className="glass-button-orange p-3.5 rounded-2xl text-white disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
+            onClick={() => sendMessage()}
+            disabled={!input.trim()}
+            className="btn-orange"
+            style={{
+              width: 44, height: 44, borderRadius: 11, flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              opacity: input.trim() ? 1 : 0.4,
+            }}
           >
-            <Send className="w-5 h-5" />
+            <Send size={16} />
           </button>
-        </form>
-
+        </div>
       </div>
 
+      <style>{`
+        @keyframes dotBounce {
+          0%, 100% { transform: translateY(0); opacity: 0.4; }
+          50% { transform: translateY(-5px); opacity: 1; }
+        }
+        @media (max-width: 768px) {
+          .voice-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

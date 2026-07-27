@@ -1,123 +1,143 @@
 import React from 'react';
-import { 
-  Cpu, Layers, Zap, Globe, ShieldCheck, Activity, Users, Server, 
-  Sparkles, ArrowUpRight, Code, Radio
-} from 'lucide-react';
+import { Zap, Globe, Cpu, Shield, Code, Sparkles, ArrowRight, Bot, Award } from 'lucide-react';
 
 export default function ExecutiveDashboard({ onSelectVoiceTab, onSelectIdCardTab, onSelectVercelModal }) {
   const stats = [
-    { label: 'Active AI Core Models', value: '4 Engines', detail: 'Gemini 1.5 + Fallback Engine', icon: Sparkles, color: 'text-orange-500' },
-    { label: 'Platform Domain', value: 'ai.orangefuturetech.com', detail: 'Vercel Edge Global Network', icon: Globe, color: 'text-cyan-600' },
-    { label: 'Hardware Solutions', value: 'IoT & Microcontrollers', detail: 'ESP32, STM32, PCB Design', icon: Cpu, color: 'text-amber-600' },
-    { label: 'Security & Credentials', value: 'SSL & Verifiable ID', detail: 'Holographic Badge Engine', icon: ShieldCheck, color: 'text-emerald-600' },
+    { label: 'AI Engine', value: 'Gemini 1.5 Flash', sub: 'REST + SDK with fallback', icon: Sparkles, color: '#f97316' },
+    { label: 'Deployment', value: 'Vercel Edge', sub: 'Global CDN · Auto SSL', icon: Globe, color: '#06b6d4' },
+    { label: 'Hardware', value: 'IoT & Embedded', sub: 'ESP32 · STM32 · PCB', icon: Cpu, color: '#a855f7' },
+    { label: 'ID System', value: 'Verifiable Badges', sub: 'Holographic · QR verified', icon: Shield, color: '#22c55e' },
+  ];
+
+  const services = [
+    { icon: Code, color: '#06b6d4', title: 'Software Engineering', desc: 'Cloud-native web apps, Next.js, Vite, microservices, APIs deployed to Vercel or AWS.' },
+    { icon: Cpu, color: '#a855f7', title: 'Hardware & IoT', desc: 'Custom PCB design, ESP32/STM32 firmware, sensor networks and edge-AI prototypes.' },
+    { icon: Sparkles, color: '#f97316', title: 'AI Integration', desc: 'Custom LLMs, RAG pipelines, voice agents, and Generative AI for enterprise workflows.' },
   ];
 
   return (
-    <div className="w-full space-y-8">
-      
-      {/* Top Banner Hero Card */}
-      <div className="glass-panel-light rounded-3xl p-8 md:p-10 border border-slate-200/80 relative overflow-hidden shadow-xl bg-white/90">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-        
-        <div className="relative z-10 max-w-3xl space-y-5">
-          <div className="inline-flex items-center gap-2.5 bg-orange-50 border border-orange-200 px-4 py-1.5 rounded-full text-xs font-mono font-bold text-orange-600 shadow-sm">
-            <Radio className="w-4 h-4 text-orange-500 animate-pulse" />
-            <span>ORANGE FUTURE TECH EXECUTIVE AI PORTAL</span>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+
+      {/* Hero Banner */}
+      <div className="glass" style={{ padding: '40px 40px', position: 'relative', overflow: 'hidden' }}>
+        {/* Glow orb */}
+        <div style={{
+          position: 'absolute', top: -60, right: -60,
+          width: 280, height: 280, borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} />
+
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: 640 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <span className="tag tag-orange" style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#f97316', display: 'inline-block', animation: 'pulseRing 2s ease-out infinite' }} />
+              Live AI CEO · Er. Orange B
+            </span>
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-black font-orbitron text-slate-900 leading-tight">
-            Communicate with <span className="text-orange-600">Er. Orange B, CEO</span>
+          <h1 style={{ fontSize: 40, fontWeight: 800, color: '#f5f5f5', letterSpacing: -1.5, lineHeight: 1.15, marginBottom: 16 }}>
+            Enterprise AI,<br />
+            <span style={{ color: '#f97316' }}>Built for Scale.</span>
           </h1>
 
-          <p className="text-sm md:text-base text-slate-600 leading-relaxed font-medium">
-            The official AI leadership platform for <strong>ai.orangefuturetech.com</strong>. Interact via continuous Voice-to-Voice speech, query our software and hardware solutions, and generate verifiable digital ID credentials.
+          <p style={{ fontSize: 15, color: '#a1a1aa', lineHeight: 1.7, marginBottom: 28 }}>
+            The official AI executive platform for Orange Future Tech. Speak directly with Er. Orange B — voice-to-voice intelligence, strategic answers, and instant executive decisions.
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 pt-3">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
             <button
               onClick={onSelectVoiceTab}
-              className="glass-button-orange px-8 py-4 rounded-2xl font-bold text-sm text-white flex items-center gap-2.5 shadow-lg"
+              className="btn-orange"
+              style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 12, fontSize: 14, fontFamily: 'inherit' }}
             >
-              <Zap className="w-5 h-5" /> Start Voice-to-Voice Conversation
+              <Bot size={16} /> Talk to AI CEO
             </button>
-
             <button
               onClick={onSelectIdCardTab}
-              className="glass-button-secondary-light px-8 py-4 rounded-2xl font-bold text-sm flex items-center gap-2.5 shadow-sm"
+              className="btn-ghost"
+              style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 12, fontSize: 14, fontFamily: 'inherit' }}
             >
-              <ShieldCheck className="w-5 h-5 text-orange-600" /> Executive ID Card Generator
+              <Award size={16} /> Generate ID Badge
             </button>
-
             <button
               onClick={onSelectVercelModal}
-              className="px-6 py-4 rounded-2xl bg-white border border-slate-300 hover:border-orange-500 text-xs font-mono font-bold text-slate-800 flex items-center gap-2 transition shadow-sm"
+              className="btn-ghost"
+              style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 24px', borderRadius: 12, fontSize: 14, fontFamily: 'inherit' }}
             >
-              <Globe className="w-4 h-4 text-cyan-600" /> Vercel Setup Guide
+              <Globe size={16} /> Deploy Guide
             </button>
           </div>
         </div>
       </div>
 
-      {/* Corporate Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((item, idx) => {
-          const IconComp = item.icon;
+      {/* Stats Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+        {stats.map((s, i) => {
+          const Icon = s.icon;
           return (
-            <div 
-              key={idx} 
-              className="glass-panel-light glass-panel-hover rounded-3xl p-6 border border-slate-200 flex flex-col justify-between bg-white/90"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-mono font-bold text-slate-500">{item.label}</span>
-                <div className="p-2.5 rounded-2xl bg-slate-50 border border-slate-200 shadow-sm">
-                  <IconComp className={`w-5 h-5 ${item.color}`} />
-                </div>
+            <div key={i} className="glass glass-hover" style={{ padding: '20px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 10,
+                background: `${s.color}15`, border: `1px solid ${s.color}30`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <Icon size={16} style={{ color: s.color }} />
               </div>
               <div>
-                <p className="text-xl font-bold font-orbitron text-slate-900">{item.value}</p>
-                <p className="text-[11px] text-slate-500 font-medium mt-1">{item.detail}</p>
+                <div style={{ fontSize: 11, color: '#71717a', fontFamily: 'monospace', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>{s.label}</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#f5f5f5', letterSpacing: -0.3 }}>{s.value}</div>
+                <div style={{ fontSize: 12, color: '#71717a', marginTop: 3 }}>{s.sub}</div>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Solutions & Capabilities Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        <div className="glass-panel-light rounded-3xl p-7 border border-slate-200 space-y-4 bg-white/90">
-          <div className="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-600 shadow-sm">
-            <Code className="w-6 h-6" />
-          </div>
-          <h3 className="font-orbitron font-bold text-slate-900 text-lg">Software Engineering</h3>
-          <p className="text-xs text-slate-600 leading-relaxed font-medium">
-            Scalable cloud infrastructure, microservices, Next.js / Vite web applications, and enterprise web applications deployed seamlessly to Vercel.
-          </p>
-        </div>
-
-        <div className="glass-panel-light rounded-3xl p-7 border border-slate-200 space-y-4 bg-white/90">
-          <div className="w-12 h-12 rounded-2xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-600 shadow-sm">
-            <Cpu className="w-6 h-6" />
-          </div>
-          <h3 className="font-orbitron font-bold text-slate-900 text-lg">Hardware & IoT Division</h3>
-          <p className="text-xs text-slate-600 leading-relaxed font-medium">
-            Custom PCB design, ESP32 and STM32 embedded C/C++ firmware development, sensor telemetry, and edge-device hardware prototyping.
-          </p>
-        </div>
-
-        <div className="glass-panel-light rounded-3xl p-7 border border-slate-200 space-y-4 bg-white/90">
-          <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-sm">
-            <Sparkles className="w-6 h-6" />
-          </div>
-          <h3 className="font-orbitron font-bold text-slate-900 text-lg">AI Model Integration</h3>
-          <p className="text-xs text-slate-600 leading-relaxed font-medium">
-            Generative AI fine-tuning, voice-to-voice agents, RAG systems, and custom LLM deployment for enterprise workflows.
-          </p>
-        </div>
-
+      {/* Services */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        {services.map((s, i) => {
+          const Icon = s.icon;
+          return (
+            <div key={i} className="glass glass-hover" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{
+                width: 44, height: 44, borderRadius: 12,
+                background: `${s.color}12`, border: `1px solid ${s.color}25`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <Icon size={20} style={{ color: s.color }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#f5f5f5', letterSpacing: -0.3, marginBottom: 8 }}>{s.title}</h3>
+                <p style={{ fontSize: 13, color: '#71717a', lineHeight: 1.65 }}>{s.desc}</p>
+              </div>
+              <button
+                onClick={onSelectVoiceTab}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 5, marginTop: 'auto',
+                  background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                  fontSize: 12, color: s.color, fontFamily: 'inherit', fontWeight: 600,
+                  transition: 'gap 0.2s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.gap = '8px'}
+                onMouseLeave={e => e.currentTarget.style.gap = '5px'}
+              >
+                Ask the CEO <ArrowRight size={13} />
+              </button>
+            </div>
+          );
+        })}
       </div>
 
+      <style>{`
+        @media (max-width: 900px) {
+          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 640px) {
+          .stats-grid { grid-template-columns: 1fr 1fr !important; }
+          .services-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

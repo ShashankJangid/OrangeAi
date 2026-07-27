@@ -1,293 +1,270 @@
 import React, { useState, useRef } from 'react';
-import { 
-  Award, Shield, QrCode, Download, Printer, CheckCircle, 
-  Sparkles, RefreshCw, Cpu, UserCheck, Lock, Globe, Zap, Radio
-} from 'lucide-react';
+import { Award, Shield, Download, Printer, Check, QrCode, RefreshCw, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
+const AVATARS = [
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
+];
+
+const CLEARANCES = ['LEVEL-5 EXECUTIVE', 'LEVEL-4 LEAD ARCHITECT', 'LEVEL-3 RESEARCHER', 'VISITOR PASS'];
+
 export default function ExecutiveIdCard() {
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     name: 'Er. Orange B',
     role: 'Chief Executive Officer',
-    department: 'Executive Board & AI Division',
+    dept: 'Executive Board & AI Division',
     clearance: 'LEVEL-5 EXECUTIVE',
     empId: 'OFT-2026-0001',
-    issueDate: '2026-07-27',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
+    date: '2026-07-27',
+    avatar: AVATARS[0],
   });
-
-  const [tilt, setTilt] = useState({ rx: 0, ry: 0, shineX: 50, shineY: 50 });
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0, sx: 50, sy: 50 });
   const cardRef = useRef(null);
 
-  const avatarOptions = [
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-    'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
-    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80'
-  ];
+  const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    const rx = ((y - centerY) / centerY) * -14;
-    const ry = ((x - centerX) / centerX) * 14;
-    
-    const shineX = (x / rect.width) * 100;
-    const shineY = (y / rect.height) * 100;
-
-    setTilt({ rx, ry, shineX, shineY });
+  const onMouseMove = e => {
+    const r = cardRef.current?.getBoundingClientRect();
+    if (!r) return;
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    setTilt({ rx: ((y - r.height / 2) / r.height) * -12, ry: ((x - r.width / 2) / r.width) * 12, sx: (x / r.width) * 100, sy: (y / r.height) * 100 });
   };
+  const onMouseLeave = () => setTilt({ rx: 0, ry: 0, sx: 50, sy: 50 });
 
-  const handleMouseLeave = () => {
-    setTilt({ rx: 0, ry: 0, shineX: 50, shineY: 50 });
-  };
-
-  const handleGenerateId = (e) => {
+  const issue = e => {
     e.preventDefault();
-    confetti({
-      particleCount: 120,
-      spread: 90,
-      origin: { y: 0.6 }
-    });
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
+  const clearanceColor = {
+    'LEVEL-5 EXECUTIVE': '#f97316',
+    'LEVEL-4 LEAD ARCHITECT': '#a855f7',
+    'LEVEL-3 RESEARCHER': '#06b6d4',
+    'VISITOR PASS': '#71717a',
+  }[form.clearance] || '#f97316';
 
   return (
-    <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      
-      <div className="lg:col-span-5 glass-panel-light rounded-3xl p-6 border border-slate-200 shadow-xl relative bg-white/90">
-        <div className="flex items-center space-x-3 border-b border-slate-200 pb-4 mb-5">
-          <div className="p-2.5 bg-orange-100 border border-orange-300 rounded-2xl">
-            <Award className="w-6 h-6 text-orange-600" />
+    <div style={{ display: 'grid', gridTemplateColumns: '380px 1fr', gap: 24, alignItems: 'start' }}>
+
+      {/* Form Panel */}
+      <div className="glass" style={{ padding: 28, display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: 10,
+              background: 'rgba(249,115,22,0.12)', border: '1px solid rgba(249,115,22,0.25)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Award size={16} style={{ color: '#f97316' }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#f5f5f5', letterSpacing: -0.3 }}>ID Card Generator</div>
+              <div style={{ fontSize: 11, color: '#71717a', fontFamily: 'monospace' }}>ai.orangefuturetech.com/id</div>
+            </div>
           </div>
-          <div>
-            <h3 className="font-orbitron font-bold text-slate-900 text-lg">ID Card Hosting & Generator</h3>
-            <p className="text-xs text-orange-600 font-mono font-bold">Verifiable Badges on ai.orangefuturetech.com</p>
-          </div>
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginTop: 16 }} />
         </div>
 
-        <form onSubmit={handleGenerateId} className="space-y-4 text-sm">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Full Executive Name</label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-300 focus:border-orange-500 rounded-2xl px-4 py-3 text-slate-900 font-medium outline-none shadow-sm"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Designation / Executive Role</label>
-            <input
-              type="text"
-              value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-300 focus:border-orange-500 rounded-2xl px-4 py-3 text-slate-900 font-medium outline-none shadow-sm"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Department</label>
+        <form onSubmit={issue} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {[
+            { label: 'Full Name', key: 'name', placeholder: 'Er. Orange B' },
+            { label: 'Designation', key: 'role', placeholder: 'Chief Executive Officer' },
+            { label: 'Department', key: 'dept', placeholder: 'Executive Board' },
+            { label: 'Employee ID', key: 'empId', placeholder: 'OFT-2026-0001' },
+          ].map(f => (
+            <div key={f.key}>
+              <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#71717a', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6, fontFamily: 'monospace' }}>{f.label}</label>
               <input
-                type="text"
-                value={formData.department}
-                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-300 focus:border-orange-500 rounded-2xl px-4 py-3 text-slate-900 font-medium outline-none"
+                className="input-field"
+                value={form[f.key]}
+                onChange={e => set(f.key, e.target.value)}
+                placeholder={f.placeholder}
+                required
               />
             </div>
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Clearance Tier</label>
-              <select
-                value={formData.clearance}
-                onChange={(e) => setFormData({ ...formData, clearance: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-300 focus:border-orange-500 rounded-2xl px-4 py-3 text-slate-900 font-bold outline-none"
-              >
-                <option value="LEVEL-5 EXECUTIVE">Level-5 Executive</option>
-                <option value="LEVEL-4 ARCHITECT">Level-4 Lead Architect</option>
-                <option value="LEVEL-3 RESEARCHER">Level-3 AI Researcher</option>
-                <option value="VISITOR PASS">Verified Visitor Pass</option>
-              </select>
-            </div>
+          ))}
+
+          <div>
+            <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#71717a', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6, fontFamily: 'monospace' }}>Clearance Level</label>
+            <select
+              className="input-field"
+              value={form.clearance}
+              onChange={e => set('clearance', e.target.value)}
+              style={{ cursor: 'pointer' }}
+            >
+              {CLEARANCES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-2">Select Avatar Photo</label>
-            <div className="flex items-center gap-3">
-              {avatarOptions.map((img, idx) => (
-                <img
-                  key={idx}
-                  src={img}
-                  alt={`Avatar ${idx}`}
-                  onClick={() => setFormData({ ...formData, avatarUrl: img })}
-                  className={`w-12 h-12 rounded-2xl object-cover cursor-pointer border-2 transition ${
-                    formData.avatarUrl === img ? 'border-orange-500 scale-110 shadow-lg shadow-orange-500/30 ring-2 ring-orange-400' : 'border-transparent opacity-60 hover:opacity-100'
-                  }`}
+            <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#71717a', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8, fontFamily: 'monospace' }}>Avatar</label>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {AVATARS.map((a, i) => (
+                <img key={i} src={a} alt="" onClick={() => set('avatar', a)}
+                  style={{
+                    width: 48, height: 48, borderRadius: 10, objectFit: 'cover', cursor: 'pointer',
+                    border: `2px solid ${form.avatar === a ? '#f97316' : 'rgba(255,255,255,0.08)'}`,
+                    boxShadow: form.avatar === a ? '0 0 12px rgba(249,115,22,0.4)' : 'none',
+                    transform: form.avatar === a ? 'scale(1.08)' : 'scale(1)',
+                    transition: 'all 0.2s',
+                  }}
                 />
               ))}
             </div>
           </div>
 
-          <div className="pt-2">
-            <button
-              type="submit"
-              className="w-full glass-button-orange py-4 rounded-2xl text-white font-bold font-orbitron flex items-center justify-center gap-2 tracking-wider shadow-lg"
-            >
-              <Sparkles className="w-5 h-5 text-yellow-300" /> ISSUE SECURITY BADGE
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="btn-orange"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '13px', borderRadius: 12, fontSize: 14, fontFamily: 'inherit', marginTop: 4 }}
+          >
+            <Sparkles size={15} /> Issue Security Badge
+          </button>
         </form>
       </div>
 
-      <div className="lg:col-span-7 flex flex-col items-center justify-center space-y-6">
-        
-        <p className="text-xs text-orange-600 font-mono font-bold flex items-center gap-1.5 animate-pulse">
-          <Zap className="w-4 h-4 text-orange-500" /> Hover over card for 3D Tilt effect
-        </p>
+      {/* Card Preview */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+        <div style={{ fontSize: 12, color: '#71717a', fontFamily: 'monospace' }}>↕ Hover card for 3D tilt</div>
 
-        <div className="perspective-1000 w-full max-w-md">
-          <div 
-            ref={cardRef}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            style={{
-              transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
-              transition: tilt.rx === 0 ? 'all 0.5s ease' : 'none'
-            }}
-            className="relative w-full bg-gradient-to-br from-slate-900 via-slate-850 to-slate-950 rounded-3xl p-6 border-2 border-orange-500 shadow-2xl overflow-hidden text-white cursor-pointer select-none"
-          >
-            <div 
-              className="absolute inset-0 pointer-events-none transition-opacity duration-300 opacity-60"
-              style={{
-                background: `radial-gradient(circle at ${tilt.shineX}% ${tilt.shineY}%, rgba(255, 255, 255, 0.3) 0%, rgba(255, 107, 0, 0.15) 40%, transparent 80%)`
-              }}
-            />
+        <div
+          ref={cardRef}
+          onMouseMove={onMouseMove}
+          onMouseLeave={onMouseLeave}
+          style={{
+            width: '100%', maxWidth: 420,
+            transform: `perspective(1000px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
+            transition: tilt.rx === 0 ? 'transform 0.5s ease' : 'none',
+            borderRadius: 20, overflow: 'hidden',
+            background: 'linear-gradient(135deg, #111111 0%, #1a1a1a 60%, #0a0a0a 100%)',
+            border: `1px solid ${clearanceColor}40`,
+            boxShadow: `0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.06)`,
+            cursor: 'pointer', userSelect: 'none', position: 'relative',
+          }}
+        >
+          {/* Shine layer */}
+          <div style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2, borderRadius: 20,
+            background: `radial-gradient(circle at ${tilt.sx}% ${tilt.sy}%, rgba(255,255,255,0.08) 0%, transparent 60%)`,
+          }} />
 
-            <div className="absolute inset-0 bg-cyber-grid-light opacity-20 pointer-events-none" />
+          {/* Card body */}
+          <div style={{ padding: '24px 24px 20px', position: 'relative', zIndex: 3 }}>
 
-            <div className="flex items-center justify-between border-b border-white/20 pb-4 mb-5 relative z-10">
-              <div className="flex items-center space-x-2.5">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center font-bold font-orbitron text-white text-sm shadow-md">
-                  OF
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: 9,
+                  background: 'linear-gradient(135deg, #f97316, #fb923c)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 11, fontWeight: 800, color: '#fff',
+                }}>OF</div>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: '#f5f5f5', letterSpacing: -0.3 }}>ORANGE FUTURE TECH</div>
+                  <div style={{ fontSize: 10, color: '#f97316', fontFamily: 'monospace' }}>ai.orangefuturetech.com</div>
+                </div>
+              </div>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 5, padding: '4px 10px', borderRadius: 99,
+                background: `${clearanceColor}15`, border: `1px solid ${clearanceColor}35`,
+              }}>
+                <Shield size={10} style={{ color: clearanceColor }} />
+                <span style={{ fontSize: 9, fontWeight: 700, color: clearanceColor, fontFamily: 'monospace', letterSpacing: 0.5 }}>SECURE</span>
+              </div>
+            </div>
+
+            {/* Photo + Info */}
+            <div style={{ display: 'flex', gap: 18, alignItems: 'flex-start' }}>
+              <div style={{ position: 'relative', flexShrink: 0 }}>
+                <img
+                  src={form.avatar} alt={form.name}
+                  style={{
+                    width: 90, height: 110, objectFit: 'cover', borderRadius: 12,
+                    border: `2px solid ${clearanceColor}50`,
+                    boxShadow: `0 0 20px ${clearanceColor}30`,
+                  }}
+                />
+                <div style={{
+                  position: 'absolute', bottom: 0, insetX: 0, left: 0, right: 0,
+                  background: clearanceColor, borderRadius: '0 0 10px 10px',
+                  textAlign: 'center', padding: '2px 0',
+                  fontSize: 8, fontWeight: 700, color: '#fff', fontFamily: 'monospace', letterSpacing: 0.5,
+                }}>CLEAR</div>
+              </div>
+
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{
+                  display: 'inline-block', padding: '3px 9px', borderRadius: 99, marginBottom: 8,
+                  background: `${clearanceColor}12`, border: `1px solid ${clearanceColor}30`,
+                  fontSize: 9, fontWeight: 700, color: clearanceColor, fontFamily: 'monospace', letterSpacing: 0.5,
+                }}>{form.clearance}</div>
+
+                <div style={{ fontSize: 20, fontWeight: 800, color: '#f5f5f5', letterSpacing: -0.5, lineHeight: 1.2, marginBottom: 6, wordBreak: 'break-word' }}>{form.name}</div>
+                <div style={{ fontSize: 12, color: '#f97316', fontWeight: 600, marginBottom: 4 }}>{form.role}</div>
+                <div style={{ fontSize: 11, color: '#71717a', marginBottom: 12 }}>{form.dept}</div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                  <div>
+                    <div style={{ fontSize: 9, color: '#71717a', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 0.5 }}>Employee ID</div>
+                    <div style={{ fontSize: 11, color: '#f97316', fontWeight: 700, fontFamily: 'monospace', marginTop: 2 }}>{form.empId}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 9, color: '#71717a', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 0.5 }}>Issued</div>
+                    <div style={{ fontSize: 11, color: '#a1a1aa', fontWeight: 600, fontFamily: 'monospace', marginTop: 2 }}>{form.date}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div style={{
+              marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ padding: 6, background: 'rgba(255,255,255,0.04)', borderRadius: 8 }}>
+                  <QrCode size={28} style={{ color: '#f97316' }} />
                 </div>
                 <div>
-                  <h4 className="font-orbitron font-bold text-sm tracking-wider text-white">ORANGE FUTURE TECH</h4>
-                  <p className="text-[11px] text-orange-400 font-mono font-bold flex items-center gap-1">
-                    <Radio className="w-3 h-3 text-orange-400 animate-pulse" /> ai.orangefuturetech.com
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-1 bg-orange-500/20 border border-orange-400 px-3 py-1 rounded-full text-xs text-orange-300 font-mono font-bold shadow-md">
-                <Shield className="w-3.5 h-3.5 text-orange-400" />
-                <span>SECURE BADGE</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-12 gap-4 items-center relative z-10">
-              
-              <div className="col-span-4 relative">
-                <div className="relative rounded-2xl overflow-hidden border-2 border-orange-500 shadow-lg shadow-orange-500/30">
-                  <img 
-                    src={formData.avatarUrl} 
-                    alt={formData.name} 
-                    className="w-full h-32 object-cover"
-                  />
-                  <div className="absolute bottom-0 inset-x-0 bg-orange-600 text-center py-0.5 text-[9px] font-bold font-mono tracking-widest text-white uppercase">
-                    CLEARANCE
+                  <div style={{ fontSize: 10, color: '#a1a1aa', fontWeight: 600 }}>
+                    <Check size={9} style={{ display: 'inline', color: '#22c55e', marginRight: 3 }} />Verified SSL Badge
                   </div>
+                  <div style={{ fontSize: 9, color: '#71717a', fontFamily: 'monospace' }}>https://ai.orangefuturetech.com/id</div>
                 </div>
               </div>
-
-              <div className="col-span-8 space-y-1.5 pl-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-orange-300 font-bold bg-orange-500/20 border border-orange-400 px-2.5 py-0.5 rounded-md">
-                  {formData.clearance}
-                </span>
-                
-                <h3 className="text-xl font-bold font-orbitron text-white leading-tight mt-1">
-                  {formData.name}
-                </h3>
-                
-                <p className="text-xs text-orange-300 font-bold">{formData.role}</p>
-                <p className="text-[11px] text-slate-300 font-medium">{formData.department}</p>
-                
-                <div className="pt-2.5 flex items-center justify-between border-t border-white/10 text-[10px] font-mono">
-                  <div>
-                    <span className="text-slate-400 block font-bold">EMPLOYEE ID</span>
-                    <span className="text-orange-400 font-bold">{formData.empId}</span>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-slate-400 block font-bold">ISSUED</span>
-                    <span className="text-slate-200 font-bold">{formData.issueDate}</span>
-                  </div>
-                </div>
-              </div>
-
+              <div style={{ fontSize: 11, color: '#71717a', fontFamily: 'monospace' }}>2026</div>
             </div>
-
-            <div className="mt-5 pt-3 border-t border-white/15 flex items-center justify-between relative z-10 bg-slate-900/90 p-3 rounded-2xl border border-white/10">
-              <div className="flex items-center space-x-2.5">
-                <div className="p-1.5 bg-orange-500/20 border border-orange-400 rounded-xl">
-                  <QrCode className="w-7 h-7 text-orange-400" />
-                </div>
-                <div className="text-[10px] font-mono">
-                  <p className="text-slate-100 font-bold flex items-center gap-1">
-                    <CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Verifiable SSL Badge
-                  </p>
-                  <p className="text-orange-400 font-bold">https://ai.orangefuturetech.com/id-card</p>
-                </div>
-              </div>
-              
-              <div className="text-right">
-                <Cpu className="w-6 h-6 text-orange-400 opacity-90 animate-pulse" />
-              </div>
-            </div>
-
           </div>
         </div>
 
-        <div className="flex items-center space-x-4 pt-2">
+        {/* Actions */}
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
           <button
-            onClick={handlePrint}
-            className="glass-button-secondary-light px-6 py-3 rounded-2xl text-xs font-bold flex items-center gap-2 transition shadow-sm"
+            onClick={() => window.print()}
+            className="btn-ghost"
+            style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '10px 20px', borderRadius: 10, fontSize: 13, fontFamily: 'inherit' }}
           >
-            <Printer className="w-4 h-4 text-orange-600" /> Print Security Badge
+            <Printer size={14} /> Print Badge
           </button>
-          
-          <a
-            href={`data:text/html;charset=utf-8,${encodeURIComponent(`
-              <html>
-                <head><title>Executive ID Card - ${formData.name}</title></head>
-                <body style="background:#0F172A; color:white; font-family:sans-serif; text-align:center; padding:50px;">
-                  <h2>Orange Future Tech Verifiable Credential</h2>
-                  <p>Name: ${formData.name}</p>
-                  <p>Role: ${formData.role}</p>
-                  <p>Clearance: ${formData.clearance}</p>
-                  <p>Hosted on: ai.orangefuturetech.com</p>
-                </body>
-              </html>
-            `)}`}
-            download={`${formData.name.replace(/\s+/g, '_')}_ID_Badge.html`}
-            className="glass-button-orange px-6 py-3 rounded-2xl text-xs font-bold text-white flex items-center gap-2"
+          <button
+            onClick={issue}
+            className="btn-orange"
+            style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '10px 20px', borderRadius: 10, fontSize: 13, fontFamily: 'inherit' }}
           >
-            <Download className="w-4 h-4" /> Download Badge File
-          </a>
+            <Download size={14} /> Download
+          </button>
         </div>
-
       </div>
 
+      <style>{`
+        @media (max-width: 768px) {
+          .id-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </div>
   );
 }

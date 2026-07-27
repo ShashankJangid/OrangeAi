@@ -1,139 +1,165 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Globe, Check, Copy, ExternalLink, Terminal, ShieldCheck, Zap } from 'lucide-react';
+import { X, Globe, Check, Copy, Terminal, ShieldCheck, ExternalLink } from 'lucide-react';
 
 export default function VercelDeployGuideModal({ isOpen, onClose }) {
-  const [copiedIndex, setCopiedIndex] = useState(null);
-
+  const [copied, setCopied] = useState(null);
   if (!isOpen) return null;
 
-  const copyToClipboard = (text, index) => {
+  const copy = (text, idx) => {
     navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
+    setCopied(idx);
+    setTimeout(() => setCopied(null), 2000);
   };
 
+  const steps = [
+    {
+      icon: Terminal,
+      title: 'Step 1 — Deploy to Vercel',
+      desc: 'Run from your project root, or import your GitHub repo at vercel.com/new',
+      code: 'npx vercel --prod',
+      copyIdx: 1,
+    },
+    {
+      icon: Globe,
+      title: 'Step 2 — Add Custom Domain',
+      desc: 'In Vercel Dashboard → Project → Settings → Domains → Add:',
+      code: 'ai.orangefuturetech.com',
+      copyIdx: 2,
+    },
+    {
+      icon: ShieldCheck,
+      title: 'Step 3 — DNS CNAME Record',
+      desc: 'In Hostinger DNS for orangefuturetech.com, add a new CNAME record:',
+      table: true,
+      copyIdx: 3,
+    },
+  ];
+
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto text-slate-900 z-[10000]">
-        
+    <div
+      onClick={e => e.target === e.currentTarget && onClose()}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 99999,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+        background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(12px)',
+      }}
+    >
+      <div className="glass" style={{ width: '100%', maxWidth: 560, borderRadius: 24, padding: 28, maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}>
+
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-200 pb-4 mb-5">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-2xl bg-cyan-50 border border-cyan-200 flex items-center justify-center">
-              <Globe className="w-6 h-6 text-cyan-600" />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: 10,
+              background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.25)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Globe size={16} style={{ color: '#06b6d4' }} />
             </div>
             <div>
-              <h3 className="font-orbitron font-bold text-lg text-slate-900">Vercel Hosting & Domain Setup</h3>
-              <p className="text-xs text-orange-600 font-mono font-bold">Connecting ai.orangefuturetech.com</p>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#f5f5f5', letterSpacing: -0.3 }}>Vercel Hosting Setup</div>
+              <div style={{ fontSize: 11, color: '#71717a', fontFamily: 'monospace' }}>Connect ai.orangefuturetech.com</div>
             </div>
           </div>
-          
-          <button 
+          <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition"
+            style={{
+              width: 32, height: 32, borderRadius: 8, border: 'none', cursor: 'pointer',
+              background: 'rgba(255,255,255,0.05)', color: '#71717a',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
           >
-            <X className="w-5 h-5" />
+            <X size={15} />
           </button>
         </div>
 
-        {/* Deploy Steps Content */}
-        <div className="space-y-6 text-sm">
-          
-          {/* Step 1 */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="font-orbitron font-bold text-xs text-orange-600 uppercase tracking-wider flex items-center gap-1.5">
-                <Terminal className="w-4 h-4 text-orange-600" /> Step 1: Deploy App to Vercel
-              </span>
-            </div>
-            <p className="text-xs text-slate-600 font-medium">
-              Run Vercel CLI from this project directory, or import your GitHub repository to your Vercel Dashboard.
-            </p>
-            
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 flex items-center justify-between font-mono text-xs text-cyan-300">
-              <code>npx vercel --prod</code>
-              <button 
-                onClick={() => copyToClipboard('npx vercel --prod', 1)}
-                className="text-slate-400 hover:text-white p-1 rounded transition"
-              >
-                {copiedIndex === 1 ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-              </button>
-            </div>
-          </div>
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 24 }} />
 
-          {/* Step 2 */}
-          <div className="space-y-2">
-            <span className="font-orbitron font-bold text-xs text-orange-600 uppercase tracking-wider flex items-center gap-1.5">
-              <Globe className="w-4 h-4 text-orange-600" /> Step 2: Add Subdomain in Vercel
-            </span>
-            <p className="text-xs text-slate-600 font-medium">
-              In Vercel Dashboard → Select your project → Go to <strong>Settings</strong> → <strong>Domains</strong> → Add domain:
-            </p>
-            
-            <div className="bg-slate-100 border border-slate-300 rounded-2xl p-3.5 flex items-center justify-between font-mono text-xs text-slate-900">
-              <code className="text-orange-600 font-bold">ai.orangefuturetech.com</code>
-              <button 
-                onClick={() => copyToClipboard('ai.orangefuturetech.com', 2)}
-                className="text-slate-500 hover:text-slate-900 p-1 rounded transition"
-              >
-                {copiedIndex === 2 ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-              </button>
-            </div>
-          </div>
+        {/* Steps */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          {steps.map((s, i) => {
+            const Icon = s.icon;
+            return (
+              <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: 8,
+                    background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.2)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                  }}>
+                    <Icon size={13} style={{ color: '#f97316' }} />
+                  </div>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: '#f5f5f5' }}>{s.title}</span>
+                </div>
+                <p style={{ fontSize: 12, color: '#71717a', lineHeight: 1.6, paddingLeft: 36 }}>{s.desc}</p>
 
-          {/* Step 3: DNS Records */}
-          <div className="space-y-2">
-            <span className="font-orbitron font-bold text-xs text-orange-600 uppercase tracking-wider flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-orange-600" /> Step 3: Configure DNS Records
-            </span>
-            <p className="text-xs text-slate-600 font-medium">
-              Open Hostinger DNS Manager for <strong>orangefuturetech.com</strong> and add this CNAME record:
-            </p>
+                {s.code && (
+                  <div style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.06)',
+                    borderRadius: 10, padding: '10px 14px', marginLeft: 36,
+                  }}>
+                    <code style={{ fontSize: 13, color: '#22d3ee', fontFamily: 'monospace' }}>{s.code}</code>
+                    <button
+                      onClick={() => copy(s.code, s.copyIdx)}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#71717a', padding: 4, transition: 'color 0.2s' }}
+                      onMouseEnter={e => e.currentTarget.style.color = '#f5f5f5'}
+                      onMouseLeave={e => e.currentTarget.style.color = '#71717a'}
+                    >
+                      {copied === s.copyIdx ? <Check size={14} style={{ color: '#22c55e' }} /> : <Copy size={14} />}
+                    </button>
+                  </div>
+                )}
 
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 font-mono text-xs text-white">
-              <div className="grid grid-cols-3 gap-2 border-b border-slate-700 pb-2 text-[10px] text-slate-400 uppercase">
-                <span>Record Type</span>
-                <span>Name / Host</span>
-                <span>Value / Target</span>
+                {s.table && (
+                  <div style={{
+                    background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.06)',
+                    borderRadius: 10, overflow: 'hidden', marginLeft: 36,
+                  }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '8px 14px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                      {['Type', 'Name', 'Value'].map(h => (
+                        <span key={h} style={{ fontSize: 10, color: '#71717a', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: 0.5 }}>{h}</span>
+                      ))}
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '10px 14px', alignItems: 'center' }}>
+                      <span style={{ fontSize: 12, color: '#22c55e', fontFamily: 'monospace', fontWeight: 700 }}>CNAME</span>
+                      <span style={{ fontSize: 12, color: '#fb923c', fontFamily: 'monospace', fontWeight: 700 }}>ai</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#22d3ee', fontFamily: 'monospace' }}>
+                        cname.vercel-dns.com
+                        <button
+                          onClick={() => copy('cname.vercel-dns.com', 3)}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#71717a', padding: 2 }}
+                        >
+                          {copied === 3 ? <Check size={12} style={{ color: '#22c55e' }} /> : <Copy size={12} />}
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="grid grid-cols-3 gap-2 items-center">
-                <span className="text-emerald-400 font-bold">CNAME</span>
-                <span className="text-orange-300 font-bold">ai</span>
-                <span className="text-cyan-300 flex items-center justify-between font-bold">
-                  cname.vercel-dns.com
-                  <button 
-                    onClick={() => copyToClipboard('cname.vercel-dns.com', 3)}
-                    className="text-slate-400 hover:text-white transition"
-                  >
-                    {copiedIndex === 3 ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  </button>
-                </span>
-              </div>
-            </div>
-          </div>
-
+            );
+          })}
         </div>
 
-        {/* Modal Footer */}
-        <div className="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between">
+        {/* Footer */}
+        <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <a
             href="https://vercel.com/new"
             target="_blank"
             rel="noreferrer"
-            className="text-xs text-orange-600 hover:underline flex items-center gap-1 font-bold"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#06b6d4', fontWeight: 600, textDecoration: 'none' }}
           >
-            Open Vercel New Project Dashboard <ExternalLink className="w-3.5 h-3.5" />
+            Open Vercel Dashboard <ExternalLink size={11} />
           </a>
-
           <button
             onClick={onClose}
-            className="glass-button-orange px-5 py-2.5 rounded-xl text-xs font-bold text-white shadow-md"
+            className="btn-orange"
+            style={{ padding: '9px 20px', borderRadius: 10, fontSize: 13, fontFamily: 'inherit' }}
           >
-            Done / Close Guide
+            Got it
           </button>
         </div>
-
       </div>
     </div>,
     document.body
