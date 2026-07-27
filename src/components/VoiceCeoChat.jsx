@@ -84,61 +84,65 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
     { emoji: '🪪', label: 'ID card', q: 'Generate an Executive ID Card for me' },
   ];
 
-  /*
-   * Layout: 2 columns inside a flex container that fills 100% parent height.
-   * Left: fixed 280px, scrolls its own content.
-   * Right: flex column: header (fixed) + messages (scroll) + chips (fixed) + input (fixed).
-   * Nothing overflows to the page.
+  /* 
+   * This component fills a position:fixed parent that spans from 
+   * below-navbar to bottom of screen. 
+   * width/height: 100% is reliable here.
    */
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: '280px 1fr',
-      gap: 14,
-      height: '100%',         /* fill the wrapper given by App.jsx */
-      minHeight: 0,
-    }}>
+    <div style={{ width: '100%', height: '100%', display: 'grid', gridTemplateColumns: '260px 1fr', gap: 12 }}>
 
-      {/* ═══════════════════════════════ LEFT PANEL ═══════════════════════════════ */}
-      <div className="glass" style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 14,
-        padding: '18px 16px',
-        overflow: 'hidden',   /* no overflow — content is designed to fit */
+      {/* ════════════════════ LEFT PANEL ════════════════════ */}
+      <div style={{
+        display: 'flex', flexDirection: 'column', gap: 12,
+        background: 'rgba(17,17,17,0.85)',
+        border: '1px solid rgba(255,255,255,0.07)',
+        borderRadius: 20,
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        padding: '16px 14px',
+        overflow: 'hidden',
       }}>
 
         {/* Status row */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-          <span className="tag tag-orange">AI CEO</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#71717a', fontFamily: 'monospace' }}>
-            <Radio size={10} style={{ color: isSpeaking ? '#f97316' : isListening ? '#06b6d4' : '#22c55e' }} />
+          <span style={{
+            fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+            padding: '3px 9px', borderRadius: 99,
+            background: 'rgba(249,115,22,0.12)', border: '1px solid rgba(249,115,22,0.3)', color: '#f97316',
+          }}>AI CEO</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10, color: '#71717a', fontFamily: 'monospace' }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: '50%', display: 'inline-block', flexShrink: 0,
+              background: isSpeaking ? '#f97316' : isListening ? '#06b6d4' : '#22c55e',
+              boxShadow: isSpeaking ? '0 0 6px #f97316' : isListening ? '0 0 6px #06b6d4' : '0 0 6px #22c55e',
+            }} />
             {isSpeaking ? 'Speaking' : isListening ? 'Listening' : isThinking ? 'Thinking' : 'Ready'}
           </span>
         </div>
 
-        {/* Avatar canvas — takes natural space */}
+        {/* Avatar */}
         <div style={{ flexShrink: 0 }}>
           <CeoAvatarCanvas isSpeaking={isSpeaking} isListening={isListening} isThinking={isThinking} />
         </div>
 
-        {/* Name & title */}
+        {/* Name */}
         <div style={{ textAlign: 'center', flexShrink: 0 }}>
-          <div style={{ fontSize: 20, fontWeight: 800, color: '#f5f5f5', letterSpacing: -0.5 }}>Er. Orange B</div>
-          <div style={{ fontSize: 11, color: '#f97316', fontFamily: 'monospace', marginTop: 3 }}>
-            CEO · Orange Future Tech
+          <div style={{ fontSize: 18, fontWeight: 800, color: '#f5f5f5', letterSpacing: -0.5 }}>Er. Orange B</div>
+          <div style={{ fontSize: 10, color: '#f97316', fontFamily: 'monospace', marginTop: 3 }}>
+            Chief Executive Officer · Orange Future Tech
           </div>
         </div>
 
-        {/* Voice bars — conditionally shown */}
+        {/* Voice wave bars */}
         {isSpeaking && (
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 3, height: 28, flexShrink: 0 }}>
-            {[0.2, 0.7, 0.4, 1, 0.6, 0.9, 0.3, 0.8, 0.5, 0.7, 0.2, 0.6].map((h, i) => (
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: 3, height: 24, flexShrink: 0 }}>
+            {[0.3, 0.7, 0.5, 1, 0.6, 0.9, 0.4, 0.8, 0.5, 0.7].map((h, i) => (
               <div key={i} className="wave-bar" style={{
-                width: 3, height: 28, borderRadius: 99,
+                width: 3, height: 24, borderRadius: 99,
                 background: 'linear-gradient(to top, #f97316, #fb923c)',
-                animationDelay: `${i * 0.07}s`,
-                animationDuration: `${0.5 + h * 0.5}s`,
+                animationDelay: `${i * 0.08}s`,
+                animationDuration: `${0.4 + h * 0.5}s`,
               }} />
             ))}
           </div>
@@ -147,8 +151,7 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
         {/* Live transcript */}
         {liveTranscript && (
           <div style={{
-            flexShrink: 0,
-            padding: '8px 12px', borderRadius: 10,
+            flexShrink: 0, padding: '8px 10px', borderRadius: 10,
             background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.2)',
             fontSize: 11, color: '#67e8f9', fontFamily: 'monospace', lineHeight: 1.5,
           }}>
@@ -156,13 +159,12 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           </div>
         )}
 
-        {/* Spacer to push controls to bottom */}
-        <div style={{ flex: 1 }} />
+        {/* Push controls to bottom */}
+        <div style={{ flex: 1, minHeight: 0 }} />
 
-        {/* Voice Loop Toggle */}
+        {/* Voice Loop */}
         <div style={{
-          flexShrink: 0,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '10px 12px', borderRadius: 12,
           background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
         }}>
@@ -176,70 +178,88 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           </label>
         </div>
 
-        {/* Mute button */}
+        {/* Mute */}
         <button
           onClick={() => setAutoSpeak(p => !p)}
-          className="btn-ghost"
           style={{
             flexShrink: 0, width: '100%', padding: '9px', borderRadius: 10,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-            fontSize: 12, fontFamily: 'inherit',
+            fontSize: 12, fontFamily: 'inherit', cursor: 'pointer',
+            background: 'transparent', color: '#a1a1aa',
+            border: '1px solid rgba(255,255,255,0.07)',
+            transition: 'all 0.2s',
           }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#f5f5f5'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#a1a1aa'; }}
         >
-          {autoSpeak ? <Volume2 size={14} style={{ color: '#f97316' }} /> : <VolumeX size={14} />}
+          {autoSpeak ? <Volume2 size={13} style={{ color: '#f97316' }} /> : <VolumeX size={13} />}
           {autoSpeak ? 'Voice Output On' : 'Voice Output Off'}
         </button>
       </div>
 
-      {/* ═══════════════════════════════ RIGHT PANEL ═══════════════════════════════ */}
-      <div className="glass" style={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: 0,
+      {/* ════════════════════ RIGHT PANEL ════════════════════ */}
+      <div style={{
+        display: 'flex', flexDirection: 'column',
+        background: 'rgba(17,17,17,0.85)',
+        border: '1px solid rgba(255,255,255,0.07)',
+        borderRadius: 20,
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
         overflow: 'hidden',
+        minHeight: 0,
       }}>
 
-        {/* Chat header — fixed */}
+        {/* ── Chat Header ── */}
         <div style={{
           flexShrink: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '14px 18px',
           borderBottom: '1px solid rgba(255,255,255,0.06)',
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: '#f5f5f5', letterSpacing: -0.3 }}>CEO Strategic Console</div>
-            <div style={{ fontSize: 11, color: '#71717a', fontFamily: 'monospace', marginTop: 1 }}>Er. Orange B · ai.orangefuturetech.com</div>
+            <div style={{ fontSize: 11, color: '#71717a', fontFamily: 'monospace', marginTop: 2 }}>
+              Er. Orange B · ai.orangefuturetech.com
+            </div>
           </div>
           <div style={{ display: 'flex', gap: 6 }}>
             <button
               onClick={() => { speechManager.stopSpeaking(); setIsSpeaking(false); }}
-              className="btn-ghost"
-              style={{ padding: '5px 10px', borderRadius: 8, fontSize: 11, fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 4 }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 4,
+                padding: '5px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.07)',
+                background: 'transparent', color: '#71717a', fontSize: 11, fontFamily: 'inherit', cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#f5f5f5'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#71717a'; }}
             >
               <VolumeX size={11} /> Mute
             </button>
             <button
               onClick={() => { setMessages([INITIAL_MSG]); speechManager.stopSpeaking(); }}
-              className="btn-ghost"
-              style={{ padding: '5px 10px', borderRadius: 8, fontSize: 11, fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 4 }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 4,
+                padding: '5px 10px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.07)',
+                background: 'transparent', color: '#71717a', fontSize: 11, fontFamily: 'inherit', cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#f5f5f5'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#71717a'; }}
             >
               <RefreshCw size={11} /> Clear
             </button>
           </div>
         </div>
 
-        {/* Messages — scrollable flex-1 */}
+        {/* ── Messages (scrollable) ── */}
         <div style={{
-          flex: 1,
-          minHeight: 0,
-          overflowY: 'auto',
+          flex: 1, minHeight: 0, overflowY: 'auto',
           padding: '16px 18px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 14,
+          display: 'flex', flexDirection: 'column', gap: 14,
         }}>
-          {messages.map((msg) => (
-            <div key={msg.id} className="fade-up" style={{
+          {messages.map(msg => (
+            <div key={msg.id} style={{
               display: 'flex', gap: 10,
               justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start',
             }}>
@@ -249,13 +269,11 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
                   background: 'linear-gradient(135deg, #f97316, #fb923c)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 9, fontWeight: 800, color: '#fff',
-                  boxShadow: '0 0 14px rgba(249,115,22,0.3)',
+                  boxShadow: '0 0 12px rgba(249,115,22,0.3)',
                 }}>CEO</div>
               )}
-
               <div style={{
-                maxWidth: '76%',
-                padding: '10px 14px',
+                maxWidth: '76%', padding: '10px 14px',
                 borderRadius: msg.sender === 'user' ? '14px 14px 4px 14px' : '14px 14px 14px 4px',
                 background: msg.sender === 'user' ? 'rgba(249,115,22,0.12)' : 'rgba(255,255,255,0.04)',
                 border: `1px solid ${msg.sender === 'user' ? 'rgba(249,115,22,0.2)' : 'rgba(255,255,255,0.07)'}`,
@@ -284,11 +302,10 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
                   </button>
                 )}
               </div>
-
               {msg.sender === 'user' && (
                 <div style={{
                   width: 30, height: 30, borderRadius: 9, flexShrink: 0,
-                  background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
                   <User size={13} style={{ color: '#a1a1aa' }} />
@@ -323,10 +340,10 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           <div ref={bottomRef} />
         </div>
 
-        {/* Suggestion chips — fixed */}
+        {/* ── Suggestion Chips ── */}
         <div style={{
           flexShrink: 0,
-          padding: '8px 18px',
+          padding: '8px 16px',
           borderTop: '1px solid rgba(255,255,255,0.04)',
           display: 'flex', gap: 6, overflowX: 'auto',
         }}>
@@ -334,40 +351,48 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
             <button
               key={p.label}
               onClick={() => sendMessage(p.q)}
-              className="btn-ghost"
               style={{
                 flexShrink: 0, padding: '5px 11px', borderRadius: 7,
+                border: '1px solid rgba(255,255,255,0.07)',
+                background: 'transparent', color: '#a1a1aa',
                 fontSize: 11, fontFamily: 'inherit', whiteSpace: 'nowrap',
                 display: 'flex', alignItems: 'center', gap: 4,
+                cursor: 'pointer', transition: 'all 0.2s',
               }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#f5f5f5'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#a1a1aa'; }}
             >
               {p.emoji} {p.label}
             </button>
           ))}
         </div>
 
-        {/* Input bar — fixed */}
-        <div style={{
-          flexShrink: 0,
-          padding: '10px 18px 14px',
-          display: 'flex', gap: 8, alignItems: 'center',
-        }}>
+        {/* ── Input Bar ── */}
+        <div style={{ flexShrink: 0, padding: '10px 16px 14px', display: 'flex', gap: 8, alignItems: 'center' }}>
           <input
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
             placeholder="Ask Er. Orange B anything…"
-            className="input-field"
-            style={{ flex: 1 }}
+            style={{
+              flex: 1, background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.09)',
+              borderRadius: 12, padding: '11px 16px',
+              color: '#f5f5f5', fontSize: 13, fontFamily: 'inherit', outline: 'none',
+              transition: 'border-color 0.2s, box-shadow 0.2s',
+            }}
+            onFocus={e => { e.currentTarget.style.borderColor = '#f97316'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(249,115,22,0.12)'; }}
+            onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.09)'; e.currentTarget.style.boxShadow = 'none'; }}
           />
 
+          {/* Mic */}
           <button
             onClick={() => startListen()}
             style={{
               width: 42, height: 42, borderRadius: 10, border: 'none', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
               background: isListening ? 'rgba(6,182,212,0.15)' : 'rgba(255,255,255,0.05)',
-              outline: `1px solid ${isListening ? 'rgba(6,182,212,0.4)' : 'rgba(255,255,255,0.08)'}`,
+              outline: `1px solid ${isListening ? 'rgba(6,182,212,0.4)' : 'rgba(255,255,255,0.09)'}`,
               boxShadow: isListening ? '0 0 18px rgba(6,182,212,0.3)' : 'none',
               transition: 'all 0.2s',
               color: isListening ? '#06b6d4' : '#71717a',
@@ -376,14 +401,16 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
             {isListening ? <MicOff size={16} /> : <Mic size={16} />}
           </button>
 
+          {/* Send */}
           <button
             onClick={() => sendMessage()}
             disabled={!input.trim()}
-            className="btn-orange"
             style={{
-              width: 42, height: 42, borderRadius: 10, flexShrink: 0,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              opacity: input.trim() ? 1 : 0.4,
+              width: 42, height: 42, borderRadius: 10, border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+              background: input.trim() ? '#f97316' : 'rgba(249,115,22,0.2)',
+              color: '#fff', transition: 'all 0.2s',
+              boxShadow: input.trim() ? '0 0 18px rgba(249,115,22,0.35)' : 'none',
             }}
           >
             <Send size={15} />
@@ -396,7 +423,7 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           0%, 100% { transform: translateY(0); opacity: 0.4; }
           50% { transform: translateY(-4px); opacity: 1; }
         }
-        @media (max-width: 720px) {
+        @media (max-width: 700px) {
           .voice-root { grid-template-columns: 1fr !important; }
         }
       `}</style>

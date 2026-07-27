@@ -8,6 +8,8 @@ import ApiKeyModal from './components/ApiKeyModal';
 import BackgroundMesh from './components/CyberBackgroundCanvas';
 import { Globe, Shield } from 'lucide-react';
 
+const NAVBAR_H = 64; // px — keep in sync with Navbar min-height
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('voice');
   const [apiKey, setApiKey] = useState('');
@@ -24,21 +26,14 @@ export default function App() {
     key ? localStorage.setItem('orange_gemini_api_key', key) : localStorage.removeItem('orange_gemini_api_key');
   };
 
-  const isVoiceTab = activeTab === 'voice';
+  const isVoice = activeTab === 'voice';
 
   return (
-    /* Root: full screen, no scroll on voice tab */
-    <div style={{
-      height: '100dvh',
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: isVoiceTab ? 'hidden' : 'auto',
-      position: 'relative',
-    }}>
+    <div style={{ minHeight: '100dvh', overflow: isVoice ? 'hidden' : 'auto', position: 'relative', background: '#0a0a0a' }}>
       <BackgroundMesh />
 
-      {/* Navbar — fixed height */}
-      <div style={{ flexShrink: 0, position: 'relative', zIndex: 10 }}>
+      {/* NAVBAR — sticky, always 64px */}
+      <div style={{ position: 'sticky', top: 0, zIndex: 50, height: NAVBAR_H }}>
         <Navbar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -48,60 +43,49 @@ export default function App() {
         />
       </div>
 
-      {/* Content area — grows to fill remaining height */}
-      <div style={{
-        flex: 1,
-        minHeight: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: isVoiceTab ? 'hidden' : 'auto',
-        position: 'relative',
-        zIndex: 1,
-      }}>
+      {/* VOICE TAB — exact remaining viewport height, no page scroll */}
+      {isVoice && (
+        <div style={{
+          position: 'fixed',
+          top: NAVBAR_H,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          padding: '14px 20px',
+          zIndex: 1,
+          boxSizing: 'border-box',
+        }}>
+          <VoiceCeoChat
+            apiKey={apiKey}
+            onSelectIdCardTab={() => setActiveTab('id-card')}
+            onSelectVercelModal={() => setVercelOpen(true)}
+          />
+        </div>
+      )}
 
-        {/* VOICE TAB — fills full remaining height, no scroll on page */}
-        {isVoiceTab && (
-          <div style={{
-            flex: 1,
-            minHeight: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '16px 20px',
-          }}>
-            <VoiceCeoChat
-              apiKey={apiKey}
-              onSelectIdCardTab={() => setActiveTab('id-card')}
-              onSelectVercelModal={() => setVercelOpen(true)}
-            />
-          </div>
-        )}
+      {/* ID CARD TAB — normal scroll */}
+      {activeTab === 'id-card' && (
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 24px 120px', position: 'relative', zIndex: 1 }}>
+          <ExecutiveIdCard />
+        </div>
+      )}
 
-        {/* ID CARD TAB — scrollable */}
-        {activeTab === 'id-card' && (
-          <div style={{ maxWidth: 1200, width: '100%', margin: '0 auto', padding: '28px 24px 120px' }}>
-            <ExecutiveIdCard />
-          </div>
-        )}
+      {/* DASHBOARD TAB — normal scroll */}
+      {activeTab === 'dashboard' && (
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 24px 120px', position: 'relative', zIndex: 1 }}>
+          <ExecutiveDashboard
+            onSelectVoiceTab={() => setActiveTab('voice')}
+            onSelectIdCardTab={() => setActiveTab('id-card')}
+            onSelectVercelModal={() => setVercelOpen(true)}
+          />
+        </div>
+      )}
 
-        {/* DASHBOARD TAB — scrollable */}
-        {activeTab === 'dashboard' && (
-          <div style={{ maxWidth: 1200, width: '100%', margin: '0 auto', padding: '28px 24px 120px' }}>
-            <ExecutiveDashboard
-              onSelectVoiceTab={() => setActiveTab('voice')}
-              onSelectIdCardTab={() => setActiveTab('id-card')}
-              onSelectVercelModal={() => setVercelOpen(true)}
-            />
-          </div>
-        )}
-      </div>
-
-      {/* Footer — only show on non-voice tabs */}
-      {!isVoiceTab && (
+      {/* FOOTER — only on non-voice tabs */}
+      {!isVoice && (
         <footer style={{
-          flexShrink: 0,
           borderTop: '1px solid rgba(255,255,255,0.06)',
           background: 'rgba(10,10,10,0.9)',
-          backdropFilter: 'blur(12px)',
           padding: '14px 24px',
           position: 'relative',
           zIndex: 1,
