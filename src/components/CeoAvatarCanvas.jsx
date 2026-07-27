@@ -8,7 +8,7 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let raf;
-    const SIZE = 220;
+    const SIZE = 170;
     canvas.width = SIZE;
     canvas.height = SIZE;
 
@@ -119,7 +119,7 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 0' }}>
-      <canvas ref={canvasRef} style={{ width: 220, height: 220 }} />
+      <canvas ref={canvasRef} style={{ width: 170, height: 170 }} />
     </div>
   );
 }

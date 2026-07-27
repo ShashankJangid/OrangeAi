@@ -27,24 +27,29 @@ export default function App() {
   const isVoiceTab = activeTab === 'voice';
 
   return (
+    /* Root: full screen, no scroll on voice tab */
     <div style={{
       height: '100dvh',
       display: 'flex',
       flexDirection: 'column',
-      position: 'relative',
       overflow: isVoiceTab ? 'hidden' : 'auto',
+      position: 'relative',
     }}>
       <BackgroundMesh />
 
-      <Navbar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onOpenApiKeyModal={() => setApiKeyOpen(true)}
-        onOpenVercelModal={() => setVercelOpen(true)}
-        hasApiKey={Boolean(apiKey)}
-      />
+      {/* Navbar — fixed height */}
+      <div style={{ flexShrink: 0, position: 'relative', zIndex: 10 }}>
+        <Navbar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onOpenApiKeyModal={() => setApiKeyOpen(true)}
+          onOpenVercelModal={() => setVercelOpen(true)}
+          hasApiKey={Boolean(apiKey)}
+        />
+      </div>
 
-      <main style={{
+      {/* Content area — grows to fill remaining height */}
+      <div style={{
         flex: 1,
         minHeight: 0,
         display: 'flex',
@@ -53,8 +58,16 @@ export default function App() {
         position: 'relative',
         zIndex: 1,
       }}>
-        {activeTab === 'voice' && (
-          <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '20px 24px', boxSizing: 'border-box' }}>
+
+        {/* VOICE TAB — fills full remaining height, no scroll on page */}
+        {isVoiceTab && (
+          <div style={{
+            flex: 1,
+            minHeight: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '16px 20px',
+          }}>
             <VoiceCeoChat
               apiKey={apiKey}
               onSelectIdCardTab={() => setActiveTab('id-card')}
@@ -62,13 +75,17 @@ export default function App() {
             />
           </div>
         )}
+
+        {/* ID CARD TAB — scrollable */}
         {activeTab === 'id-card' && (
-          <div style={{ maxWidth: 1200, width: '100%', margin: '0 auto', padding: '28px 24px 100px' }}>
+          <div style={{ maxWidth: 1200, width: '100%', margin: '0 auto', padding: '28px 24px 120px' }}>
             <ExecutiveIdCard />
           </div>
         )}
+
+        {/* DASHBOARD TAB — scrollable */}
         {activeTab === 'dashboard' && (
-          <div style={{ maxWidth: 1200, width: '100%', margin: '0 auto', padding: '28px 24px 100px' }}>
+          <div style={{ maxWidth: 1200, width: '100%', margin: '0 auto', padding: '28px 24px 120px' }}>
             <ExecutiveDashboard
               onSelectVoiceTab={() => setActiveTab('voice')}
               onSelectIdCardTab={() => setActiveTab('id-card')}
@@ -76,30 +93,34 @@ export default function App() {
             />
           </div>
         )}
-      </main>
+      </div>
 
-      {/* Footer */}
-      <footer style={{
-        borderTop: '1px solid rgba(255,255,255,0.06)',
-        background: 'rgba(10,10,10,0.8)',
-        backdropFilter: 'blur(12px)',
-        padding: '16px 24px',
-        position: 'relative', zIndex: 1,
-      }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-          <span style={{ fontSize: 12, color: '#71717a', fontFamily: 'monospace' }}>
-            © 2026 Orange Future Tech · <span style={{ color: '#f97316' }}>ai.orangefuturetech.com</span>
-          </span>
-          <div style={{ display: 'flex', gap: 16 }}>
-            <button onClick={() => setVercelOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#71717a', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 5 }}>
-              <Globe size={12} style={{ color: '#06b6d4' }} /> Deploy Guide
-            </button>
-            <button onClick={() => setActiveTab('id-card')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#71717a', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 5 }}>
-              <Shield size={12} style={{ color: '#f97316' }} /> ID Badges
-            </button>
+      {/* Footer — only show on non-voice tabs */}
+      {!isVoiceTab && (
+        <footer style={{
+          flexShrink: 0,
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+          background: 'rgba(10,10,10,0.9)',
+          backdropFilter: 'blur(12px)',
+          padding: '14px 24px',
+          position: 'relative',
+          zIndex: 1,
+        }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+            <span style={{ fontSize: 12, color: '#71717a', fontFamily: 'monospace' }}>
+              © 2026 Orange Future Tech · <span style={{ color: '#f97316' }}>ai.orangefuturetech.com</span>
+            </span>
+            <div style={{ display: 'flex', gap: 16 }}>
+              <button onClick={() => setVercelOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#71717a', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 5 }}>
+                <Globe size={12} style={{ color: '#06b6d4' }} /> Deploy Guide
+              </button>
+              <button onClick={() => setActiveTab('id-card')} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#71717a', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 5 }}>
+                <Shield size={12} style={{ color: '#f97316' }} /> ID Badges
+              </button>
+            </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      )}
 
       <VercelDeployGuideModal isOpen={vercelOpen} onClose={() => setVercelOpen(false)} />
       <ApiKeyModal isOpen={apiKeyOpen} onClose={() => setApiKeyOpen(false)} apiKey={apiKey} onSaveApiKey={saveKey} />
