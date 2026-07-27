@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+}
+
+.font-orbitron {
+  font-family: 'Orbitron', monospace, sans-serif;
+}
+
+/* High-Contrast Glass & Panel Utilities */
+.glass-panel {
+  background: rgba(10, 16, 28, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(0, 240, 255, 0.35);
+  box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.8), 0 0 20px 0 rgba(0, 240, 255, 0.15);
+}
+
+.glass-panel-orange {
+  background: rgba(18, 12, 24, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255, 85, 0, 0.4);
+  box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.8), 0 0 20px 0 rgba(255, 85, 0, 0.2);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(14, 22, 38, 0.98);
+  border-color: rgba(0, 240, 255, 0.7);
+  box-shadow: 0 14px 45px 0 rgba(0, 240, 255, 0.3);
+  transform: translateY(-3px);
+}
+
+/* High-Contrast Action Buttons */
+.glass-button-cyan {
+  background: linear-gradient(135deg, #00F0FF 0%, #0088FF 50%, #0044FF 100%);
+  color: #000000;
+  font-weight: 800;
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+  transition: all 0.25s ease;
+}
+
+.glass-button-cyan:hover {
+  box-shadow: 0 0 40px rgba(0, 240, 255, 1);
+  transform: scale(1.03);
+}
+
+.glass-button-orange {
+  background: linear-gradient(135deg, #FF5500 0%, #FF8800 50%, #E04400 100%);
+  color: #FFFFFF;
+  font-weight: 800;
+  box-shadow: 0 0 25px rgba(255, 85, 0, 0.6);
+  transition: all 0.25s ease;
+}
+
+.glass-button-orange:hover {
+  box-shadow: 0 0 40px rgba(255, 85, 0, 1);
+  transform: scale(1.03);
+}
+
+.glass-button-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(0, 240, 255, 0.4);
+  color: #FFFFFF;
+  backdrop-filter: blur(12px);
+  transition: all 0.25s ease;
+}
+
+.glass-button-secondary:hover {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: rgba(0, 240, 255, 0.9);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+}
+
+/* Text Glow Effects */
+.glow-text-cyan {
+  color: #00F0FF;
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.8), 0 0 30px rgba(0, 240, 255, 0.4);
+}
+
+.glow-text-orange {
+  color: #FF5500;
+  text-shadow: 0 0 15px rgba(255, 85, 0, 0.8), 0 0 30px rgba(255, 85, 0, 0.4);
+}
+
+.glow-text-gold {
+  color: #FFD700;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+}
+
+/* High Contrast Grid Background */
+.bg-cyber-grid {
+  background-image: 
+    linear-gradient(rgba(0, 240, 255, 0.07) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.07) 1.5px, transparent 1.5px);
+  background-size: 32px 32px;
+}
+
+/* Custom High Contrast Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #030712;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00F0FF;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF5500;
+}
