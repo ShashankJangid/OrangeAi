@@ -24,8 +24,16 @@ export default function App() {
     key ? localStorage.setItem('orange_gemini_api_key', key) : localStorage.removeItem('orange_gemini_api_key');
   };
 
+  const isVoiceTab = activeTab === 'voice';
+
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+    <div style={{
+      height: '100dvh',
+      display: 'flex',
+      flexDirection: 'column',
+      position: 'relative',
+      overflow: isVoiceTab ? 'hidden' : 'auto',
+    }}>
       <BackgroundMesh />
 
       <Navbar
@@ -36,21 +44,37 @@ export default function App() {
         hasApiKey={Boolean(apiKey)}
       />
 
-      <main style={{ flex: 1, maxWidth: 1200, width: '100%', margin: '0 auto', padding: '28px 24px 100px', position: 'relative', zIndex: 1 }}>
+      <main style={{
+        flex: 1,
+        minHeight: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: isVoiceTab ? 'hidden' : 'auto',
+        position: 'relative',
+        zIndex: 1,
+      }}>
         {activeTab === 'voice' && (
-          <VoiceCeoChat
-            apiKey={apiKey}
-            onSelectIdCardTab={() => setActiveTab('id-card')}
-            onSelectVercelModal={() => setVercelOpen(true)}
-          />
+          <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '20px 24px', boxSizing: 'border-box' }}>
+            <VoiceCeoChat
+              apiKey={apiKey}
+              onSelectIdCardTab={() => setActiveTab('id-card')}
+              onSelectVercelModal={() => setVercelOpen(true)}
+            />
+          </div>
         )}
-        {activeTab === 'id-card' && <ExecutiveIdCard />}
+        {activeTab === 'id-card' && (
+          <div style={{ maxWidth: 1200, width: '100%', margin: '0 auto', padding: '28px 24px 100px' }}>
+            <ExecutiveIdCard />
+          </div>
+        )}
         {activeTab === 'dashboard' && (
-          <ExecutiveDashboard
-            onSelectVoiceTab={() => setActiveTab('voice')}
-            onSelectIdCardTab={() => setActiveTab('id-card')}
-            onSelectVercelModal={() => setVercelOpen(true)}
-          />
+          <div style={{ maxWidth: 1200, width: '100%', margin: '0 auto', padding: '28px 24px 100px' }}>
+            <ExecutiveDashboard
+              onSelectVoiceTab={() => setActiveTab('voice')}
+              onSelectIdCardTab={() => setActiveTab('id-card')}
+              onSelectVercelModal={() => setVercelOpen(true)}
+            />
+          </div>
         )}
       </main>
 

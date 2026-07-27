@@ -77,10 +77,10 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
   ];
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 20, alignItems: 'start', height: 'calc(100vh - 128px)', minHeight: 560 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: 16, alignItems: 'stretch', height: '100%', minHeight: 0 }}>
 
       {/* LEFT: Avatar Panel */}
-      <div className="glass" style={{ display: 'flex', flexDirection: 'column', gap: 20, padding: 24, height: '100%' }}>
+      <div className="glass" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '20px', height: '100%', minHeight: 0, overflowY: 'auto' }}>
 
         {/* Status tag */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -163,7 +163,7 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
       </div>
 
       {/* RIGHT: Chat Panel */}
-      <div className="glass" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+      <div className="glass" style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0, overflow: 'hidden' }}>
 
         {/* Chat Header */}
         <div style={{
