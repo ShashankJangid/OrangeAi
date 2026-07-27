@@ -41,13 +41,46 @@ const CEO_FALLBACK_KNOWLEDGE = [
   }
 ];
 
-export async function askCeoAI(userInput, apiKey = '') {
+export async function askCeoAI(userInput, customApiKey = '') {
   const cleanInput = userInput.trim();
   if (!cleanInput) return "I am listening. How can I assist you with Orange Future Tech today?";
 
-  if (apiKey && apiKey.length > 10) {
+  const activeApiKey = customApiKey || localStorage.getItem('orange_gemini_api_key') || import.meta.env.VITE_GEMINI_API_KEY || '';
+
+  if (activeApiKey && activeApiKey.length > 5) {
     try {
-      const genAI = new GoogleGenerativeAI(apiKey);
+      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-goog-api-key": activeApiKey
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `${CEO_SYSTEM_PROMPT}\n\nUser Question: ${cleanInput}`
+                }
+              ]
+            }
+          ]
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const generatedText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (generatedText) {
+          return generatedText;
+        }
+      }
+    } catch (err) {
+      console.warn("Direct REST Gemini endpoint fetch failed, attempting SDK fallback:", err);
+    }
+
+    try {
+      const genAI = new GoogleGenerativeAI(activeApiKey);
       const model = genAI.getGenerativeModel({ 
         model: "gemini-1.5-flash",
         systemInstruction: CEO_SYSTEM_PROMPT
@@ -60,7 +93,7 @@ export async function askCeoAI(userInput, apiKey = '') {
         return text;
       }
     } catch (error) {
-      console.warn("Gemini API call failed, falling back to CEO Brain:", error);
+      console.warn("Gemini SDK call failed, falling back to CEO Brain:", error);
     }
   }
 
@@ -80,5 +113,5 @@ export async function askCeoAI(userInput, apiKey = '') {
     return "You're most welcome. At Orange Future Tech, excellence is our standard. Let me know if you need anything else from executive management!";
   }
 
-  return `As CEO of Orange Future Tech, I can confirm that our team is pushing the boundaries of AI, software architecture, and hardware engineering regarding "${cleanInput}". Connect your free Gemini API Key in settings for full open-domain executive intelligence, or explore our ID Card Hub and Vercel hosting guides!`;
+  return `As CEO of Orange Future Tech, I can confirm that our team is pushing the boundaries of AI, software architecture, and hardware engineering regarding "${cleanInput}". Explore our ID Card Hub and Vercel hosting guides!`;
 }
