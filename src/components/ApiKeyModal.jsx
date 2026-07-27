@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Key, Check, ExternalLink, Sparkles } from 'lucide-react';
 
 export default function ApiKeyModal({ isOpen, onClose, apiKey, onSaveApiKey }) {
@@ -17,9 +18,9 @@ export default function ApiKeyModal({ isOpen, onClose, apiKey, onSaveApiKey }) {
     }, 1200);
   };
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-md bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl overflow-hidden text-slate-900">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+      <div className="relative w-full max-w-md bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl overflow-hidden text-slate-900 z-[10000]">
         
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-slate-200 pb-4 mb-4">
@@ -89,6 +90,7 @@ export default function ApiKeyModal({ isOpen, onClose, apiKey, onSaveApiKey }) {
         </form>
 
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

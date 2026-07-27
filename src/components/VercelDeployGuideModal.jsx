@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Globe, Check, Copy, ExternalLink, Terminal, ShieldCheck, Zap } from 'lucide-react';
 
 export default function VercelDeployGuideModal({ isOpen, onClose }) {
@@ -12,9 +13,9 @@ export default function VercelDeployGuideModal({ isOpen, onClose }) {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto text-slate-900">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+      <div className="relative w-full max-w-2xl bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto text-slate-900 z-[10000]">
         
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-200 pb-4 mb-5">
@@ -115,7 +116,7 @@ export default function VercelDeployGuideModal({ isOpen, onClose }) {
         </div>
 
         {/* Modal Footer */}
-        <div className="mt-6 pt-4 border-b-0 border-t border-slate-200 flex items-center justify-between">
+        <div className="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between">
           <a
             href="https://vercel.com/new"
             target="_blank"
@@ -134,6 +135,7 @@ export default function VercelDeployGuideModal({ isOpen, onClose }) {
         </div>
 
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
