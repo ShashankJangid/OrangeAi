@@ -14,19 +14,19 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
     const resize = () => {
       const parent = canvas.parentElement;
       if (parent) {
-        canvas.width = parent.clientWidth || 320;
-        canvas.height = parent.clientHeight || 320;
+        canvas.width = parent.clientWidth || 340;
+        canvas.height = parent.clientHeight || 340;
       }
     };
     resize();
     window.addEventListener('resize', resize);
 
-    const particles = Array.from({ length: 50 }, () => ({
+    const particles = Array.from({ length: 60 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      radius: Math.random() * 2.5 + 1.2,
-      speedX: (Math.random() - 0.5) * 1.5,
-      speedY: (Math.random() - 0.5) * 1.5,
+      radius: Math.random() * 2.8 + 1.2,
+      speedX: (Math.random() - 0.5) * 1.8,
+      speedY: (Math.random() - 0.5) * 1.8,
     }));
 
     const render = () => {
@@ -37,8 +37,8 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
       const baseRadius = Math.min(centerX, centerY) * 0.42;
 
       particles.forEach(p => {
-        p.x += p.speedX * (isSpeaking ? 2 : 1);
-        p.y += p.speedY * (isSpeaking ? 2 : 1);
+        p.x += p.speedX * (isSpeaking ? 2.2 : 1);
+        p.y += p.speedY * (isSpeaking ? 2.2 : 1);
 
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
@@ -49,50 +49,50 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = isListening ? '#00F0FF' : isSpeaking ? '#FF5500' : '#FFD700';
         ctx.shadowColor = isListening ? '#00F0FF' : '#FF5500';
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 14;
         ctx.fill();
       });
 
       let pulseMultiplier = 1;
       if (isSpeaking) {
-        pulseMultiplier = 1 + Math.sin(Date.now() * 0.018) * 0.14;
+        pulseMultiplier = 1 + Math.sin(Date.now() * 0.018) * 0.15;
       } else if (isListening) {
-        pulseMultiplier = 1 + Math.sin(Date.now() * 0.022) * 0.09;
+        pulseMultiplier = 1 + Math.sin(Date.now() * 0.024) * 0.09;
       } else if (isThinking) {
-        pulseMultiplier = 1 + Math.sin(Date.now() * 0.035) * 0.11;
+        pulseMultiplier = 1 + Math.sin(Date.now() * 0.038) * 0.12;
       }
 
       const currentRadius = baseRadius * pulseMultiplier;
 
       const coreGrad = ctx.createRadialGradient(
-        centerX, centerY, 5,
-        centerX, centerY, currentRadius * 1.7
+        centerX, centerY, 6,
+        centerX, centerY, currentRadius * 1.75
       );
 
       if (isSpeaking) {
         coreGrad.addColorStop(0, '#FFFFFF');
-        coreGrad.addColorStop(0.3, '#FFD700');
-        coreGrad.addColorStop(0.7, '#FF3300');
+        coreGrad.addColorStop(0.25, '#FFD700');
+        coreGrad.addColorStop(0.65, '#FF3300');
         coreGrad.addColorStop(1, 'rgba(255, 51, 0, 0)');
       } else if (isListening) {
         coreGrad.addColorStop(0, '#FFFFFF');
-        coreGrad.addColorStop(0.3, '#00F0FF');
-        coreGrad.addColorStop(0.75, '#0044FF');
+        coreGrad.addColorStop(0.25, '#00F0FF');
+        coreGrad.addColorStop(0.7, '#0044FF');
         coreGrad.addColorStop(1, 'rgba(0, 68, 255, 0)');
       } else if (isThinking) {
         coreGrad.addColorStop(0, '#FFFFFF');
-        coreGrad.addColorStop(0.3, '#E082FF');
-        coreGrad.addColorStop(0.75, '#7C3AED');
+        coreGrad.addColorStop(0.25, '#E082FF');
+        coreGrad.addColorStop(0.7, '#7C3AED');
         coreGrad.addColorStop(1, 'rgba(124, 58, 237, 0)');
       } else {
         coreGrad.addColorStop(0, '#FFFFFF');
-        coreGrad.addColorStop(0.35, '#00F0FF');
-        coreGrad.addColorStop(0.8, '#FF5500');
+        coreGrad.addColorStop(0.3, '#00F0FF');
+        coreGrad.addColorStop(0.75, '#FF5500');
         coreGrad.addColorStop(1, 'rgba(255, 85, 0, 0)');
       }
 
       ctx.beginPath();
-      ctx.arc(centerX, centerY, currentRadius * 1.6, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, currentRadius * 1.65, 0, Math.PI * 2);
       ctx.fillStyle = coreGrad;
       ctx.fill();
 
@@ -102,30 +102,30 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
       ctx.translate(centerX, centerY);
       ctx.rotate(-hudAngle);
       ctx.beginPath();
-      ctx.arc(0, 0, currentRadius * 1.52, 0, Math.PI * 2);
-      ctx.setLineDash([10, 14]);
+      ctx.arc(0, 0, currentRadius * 1.55, 0, Math.PI * 2);
+      ctx.setLineDash([12, 16]);
       ctx.strokeStyle = isListening ? '#00F0FF' : '#FF5500';
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 2.8;
       ctx.shadowColor = isListening ? '#00F0FF' : '#FF5500';
-      ctx.shadowBlur = 15;
+      ctx.shadowBlur = 18;
       ctx.stroke();
       ctx.restore();
 
-      const numBars = 44;
+      const numBars = 48;
       for (let b = 0; b < numBars; b++) {
         const barAngle = (b / numBars) * Math.PI * 2;
         let barHeight = 10;
 
         if (isSpeaking) {
-          barHeight = Math.sin(Date.now() * 0.016 + b * 0.6) * 28 + 22;
+          barHeight = Math.sin(Date.now() * 0.016 + b * 0.6) * 30 + 24;
         } else if (isListening) {
-          barHeight = Math.sin(Date.now() * 0.02 + b * 0.5) * 14 + 12;
+          barHeight = Math.sin(Date.now() * 0.02 + b * 0.5) * 15 + 12;
         }
 
-        const x1 = centerX + Math.cos(barAngle) * (currentRadius * 1.12);
-        const y1 = centerY + Math.sin(barAngle) * (currentRadius * 1.12);
-        const x2 = centerX + Math.cos(barAngle) * (currentRadius * 1.12 + barHeight);
-        const y2 = centerY + Math.sin(barAngle) * (currentRadius * 1.12 + barHeight);
+        const x1 = centerX + Math.cos(barAngle) * (currentRadius * 1.14);
+        const y1 = centerY + Math.sin(barAngle) * (currentRadius * 1.14);
+        const x2 = centerX + Math.cos(barAngle) * (currentRadius * 1.14 + barHeight);
+        const y2 = centerY + Math.sin(barAngle) * (currentRadius * 1.14 + barHeight);
 
         ctx.beginPath();
         ctx.moveTo(x1, y1);
@@ -137,25 +137,25 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
           ? '#00F0FF' 
           : '#00F0FF';
 
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 3.2;
         ctx.shadowColor = ctx.strokeStyle;
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 14;
         ctx.stroke();
       }
 
       ctx.save();
-      ctx.font = '900 26px Orbitron, sans-serif';
+      ctx.font = '900 28px Orbitron, sans-serif';
       ctx.fillStyle = '#FFFFFF';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.shadowColor = '#00F0FF';
-      ctx.shadowBlur = 20;
+      ctx.shadowBlur = 24;
       ctx.fillText('CEO', centerX, centerY - 4);
 
-      ctx.font = '800 11px Inter, sans-serif';
+      ctx.font = '900 11px Inter, sans-serif';
       ctx.fillStyle = isListening ? '#00F0FF' : isSpeaking ? '#FFD700' : '#00F0FF';
       ctx.shadowColor = ctx.fillStyle;
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 12;
       ctx.fillText(
         isSpeaking ? '● VOICE ACTIVE' : isListening ? '● LISTENING...' : isThinking ? '● ANALYZING...' : 'VICTOR VANE',
         centerX,

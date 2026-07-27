@@ -16,13 +16,13 @@ export default function CyberBackgroundCanvas() {
     resize();
     window.addEventListener('resize', resize);
 
-    const particles = Array.from({ length: 70 }, () => ({
+    const particles = Array.from({ length: 80 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.6,
-      vy: (Math.random() - 0.5) * 0.6,
-      radius: Math.random() * 2.5 + 1.2,
-      color: Math.random() > 0.5 ? 'rgba(0, 240, 255, ' : 'rgba(255, 85, 0, '
+      vx: (Math.random() - 0.5) * 0.7,
+      vy: (Math.random() - 0.5) * 0.7,
+      radius: Math.random() * 2.8 + 1.2,
+      color: Math.random() > 0.45 ? 'rgba(0, 240, 255, ' : 'rgba(255, 85, 0, '
     }));
 
     let mouseX = -1000;
@@ -38,11 +38,11 @@ export default function CyberBackgroundCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const bgGrad = ctx.createRadialGradient(
-        canvas.width * 0.5, canvas.height * 0.3, 100,
-        canvas.width * 0.5, canvas.height * 0.5, canvas.width * 0.9
+        canvas.width * 0.5, canvas.height * 0.3, 80,
+        canvas.width * 0.5, canvas.height * 0.5, canvas.width * 0.95
       );
-      bgGrad.addColorStop(0, 'rgba(0, 240, 255, 0.08)');
-      bgGrad.addColorStop(0.5, 'rgba(255, 85, 0, 0.05)');
+      bgGrad.addColorStop(0, 'rgba(0, 240, 255, 0.09)');
+      bgGrad.addColorStop(0.4, 'rgba(255, 85, 0, 0.06)');
       bgGrad.addColorStop(1, 'rgba(3, 7, 18, 0)');
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -57,20 +57,22 @@ export default function CyberBackgroundCanvas() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.color + '0.85)';
+        ctx.fillStyle = p.color + '0.9)';
         ctx.shadowColor = p.color === 'rgba(0, 240, 255, ' ? '#00F0FF' : '#FF5500';
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 12;
         ctx.fill();
 
         const dxMouse = mouseX - p.x;
         const dyMouse = mouseY - p.y;
         const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-        if (distMouse < 180) {
+        if (distMouse < 200) {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(mouseX, mouseY);
-          ctx.strokeStyle = p.color + (0.4 * (1 - distMouse / 180)) + ')';
-          ctx.lineWidth = 1.2;
+          ctx.strokeStyle = p.color + (0.5 * (1 - distMouse / 200)) + ')';
+          ctx.lineWidth = 1.4;
+          ctx.shadowColor = p.color === 'rgba(0, 240, 255, ' ? '#00F0FF' : '#FF5500';
+          ctx.shadowBlur = 8;
           ctx.stroke();
         }
 
@@ -80,13 +82,13 @@ export default function CyberBackgroundCanvas() {
           const dy = p.y - p2.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 130) {
+          if (dist < 140) {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            const alpha = 0.25 * (1 - dist / 130);
+            const alpha = 0.3 * (1 - dist / 140);
             ctx.strokeStyle = p.color + alpha + ')';
-            ctx.lineWidth = 0.8;
+            ctx.lineWidth = 0.9;
             ctx.stroke();
           }
         }

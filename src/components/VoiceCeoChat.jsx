@@ -134,17 +134,20 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       
-      <div className="lg:col-span-5 glass-panel rounded-2xl p-6 flex flex-col items-center justify-between border-2 border-cyan-500/40 shadow-2xl relative overflow-hidden bg-slate-950/95">
+      {/* Left Column: Holographic CEO Avatar & Futuristic Control Terminal */}
+      <div className="lg:col-span-5 glass-panel-futuristic rounded-3xl p-6 flex flex-col items-center justify-between border-2 border-cyan-400/50 shadow-[0_0_50px_rgba(0,240,255,0.2)] relative overflow-hidden">
         
-        <div className="absolute top-2 left-2 w-3.5 h-3.5 border-t-2 border-l-2 border-cyan-400" />
-        <div className="absolute top-2 right-2 w-3.5 h-3.5 border-t-2 border-r-2 border-cyan-400" />
-        <div className="absolute bottom-2 left-2 w-3.5 h-3.5 border-b-2 border-l-2 border-cyan-400" />
-        <div className="absolute bottom-2 right-2 w-3.5 h-3.5 border-b-2 border-r-2 border-cyan-400" />
+        {/* Sci-Fi Corner Bracket Accents */}
+        <div className="absolute top-3 left-3 w-4 h-4 border-t-2 border-l-2 border-cyan-400" />
+        <div className="absolute top-3 right-3 w-4 h-4 border-t-2 border-r-2 border-cyan-400" />
+        <div className="absolute bottom-3 left-3 w-4 h-4 border-b-2 border-l-2 border-cyan-400" />
+        <div className="absolute bottom-3 right-3 w-4 h-4 border-b-2 border-r-2 border-cyan-400" />
 
+        {/* Header Telemetry */}
         <div className="w-full flex items-center justify-between border-b border-cyan-500/30 pb-4 mb-2">
           <div className="flex items-center space-x-2">
             <div className="w-3.5 h-3.5 rounded-full bg-cyan-400 animate-ping" />
-            <span className="font-orbitron text-xs tracking-wider text-cyan-400 font-black uppercase">
+            <span className="font-orbitron text-xs tracking-wider text-cyan-300 font-black uppercase">
               AI CEO EXECUTIVE CORE
             </span>
           </div>
@@ -153,8 +156,10 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           </span>
         </div>
 
+        {/* Dynamic Canvas Hologram Avatar */}
         <CeoAvatarCanvas isSpeaking={isSpeaking} isListening={isListening} isThinking={isThinking} />
 
+        {/* CEO Identity Info */}
         <div className="text-center my-3">
           <h2 className="text-2xl font-black font-orbitron text-white flex items-center justify-center gap-2 text-shadow-glow">
             Victor Vane <Award className="w-5 h-5 text-yellow-400" />
@@ -162,29 +167,31 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           <p className="text-xs text-cyan-300 font-mono font-bold tracking-wide mt-1">Chief Executive Officer | Orange Future Tech</p>
           
           <div className="flex items-center justify-center gap-2 mt-2">
-            <span className={`text-xs font-mono font-black uppercase px-3.5 py-1 rounded-full border-2 shadow-lg ${
-              isSpeaking ? 'bg-amber-500/25 text-amber-300 border-amber-400 animate-pulse' :
-              isListening ? 'bg-cyan-500/25 text-cyan-300 border-cyan-400 animate-pulse' :
-              isThinking ? 'bg-purple-500/25 text-purple-300 border-purple-400 animate-pulse' :
-              'bg-emerald-500/20 text-emerald-300 border-emerald-400'
+            <span className={`text-xs font-mono font-black uppercase px-4 py-1 rounded-full border-2 shadow-xl ${
+              isSpeaking ? 'bg-amber-500/30 text-amber-300 border-amber-400 animate-pulse' :
+              isListening ? 'bg-cyan-500/30 text-cyan-300 border-cyan-400 animate-pulse' :
+              isThinking ? 'bg-purple-500/30 text-purple-300 border-purple-400 animate-pulse' :
+              'bg-emerald-500/25 text-emerald-300 border-emerald-400'
             }`}>
               {isSpeaking ? '🔊 VOICE ACTIVE' : isListening ? '🎙️ LISTENING...' : isThinking ? '⚡ ANALYZING...' : '● EXECUTIVE READY'}
             </span>
           </div>
         </div>
 
+        {/* Equalizer Visualizer Strip when Speaking */}
         {isSpeaking && (
           <div className="w-full flex items-center justify-center space-x-1.5 py-2">
             {[40, 75, 35, 95, 55, 85, 45, 100, 65, 35].map((h, idx) => (
               <div 
                 key={idx}
                 style={{ height: `${h * 0.28}px`, animationDelay: `${idx * 0.1}s` }}
-                className="w-1.5 bg-gradient-to-t from-cyan-500 via-blue-400 to-yellow-400 rounded-full animate-wave-bar"
+                className="w-1.5 bg-gradient-to-t from-cyan-400 via-blue-400 to-yellow-300 rounded-full animate-wave-bar"
               />
             ))}
           </div>
         )}
 
+        {/* Voice-to-Voice Controls */}
         <div className="w-full space-y-3 pt-3 border-t border-cyan-500/30">
           
           <div className="flex items-center justify-center space-x-3">
@@ -192,7 +199,7 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
               onClick={() => toggleListening()}
               className={`w-full py-4 px-6 rounded-2xl font-black font-orbitron flex items-center justify-center gap-3 transition-all duration-300 shadow-2xl ${
                 isListening 
-                  ? 'bg-cyan-400 text-black shadow-[0_0_35px_rgba(0,240,255,1)] scale-105 animate-pulse' 
+                  ? 'bg-cyan-400 text-black shadow-[0_0_40px_rgba(0,240,255,1)] scale-105 animate-pulse' 
                   : 'glass-button-cyan text-black hover:scale-[1.02]'
               }`}
             >
@@ -209,7 +216,7 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
             </button>
           </div>
 
-          <div className="flex items-center justify-between bg-slate-950 p-3.5 rounded-2xl border border-cyan-500/40 shadow-inner">
+          <div className="flex items-center justify-between bg-slate-950/80 p-3.5 rounded-2xl border border-cyan-500/40 shadow-inner">
             <div className="flex items-center gap-2.5">
               <div className="p-1.5 bg-cyan-500/20 rounded-lg">
                 <Zap className="w-4 h-4 text-cyan-400" />
@@ -231,7 +238,7 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           </div>
 
           {sttTranscript && (
-            <div className="p-3 bg-cyan-950 border-2 border-cyan-400 rounded-xl text-xs text-white shadow-lg animate-fadeIn font-mono">
+            <div className="p-3.5 bg-cyan-950/90 border-2 border-cyan-400 rounded-xl text-xs text-white shadow-xl animate-fadeIn font-mono">
               <span className="font-bold text-cyan-400">Live Speech: </span>"{sttTranscript}"
             </div>
           )}
@@ -239,11 +246,12 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
         </div>
       </div>
 
-      <div className="lg:col-span-7 glass-panel rounded-2xl p-6 flex flex-col h-[600px] border-2 border-cyan-500/40 shadow-2xl relative bg-slate-950/95">
+      {/* Right Column: Glassmorphism Terminal Console */}
+      <div className="lg:col-span-7 glass-panel-futuristic rounded-3xl p-6 flex flex-col h-[610px] border-2 border-cyan-400/50 shadow-[0_0_50px_rgba(0,240,255,0.2)] relative">
         
         <div className="flex items-center justify-between pb-4 border-b border-cyan-500/30 mb-4">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-cyan-500/20 rounded-xl border border-cyan-400">
+            <div className="p-2.5 bg-cyan-500/20 rounded-xl border border-cyan-400">
               <Bot className="w-6 h-6 text-cyan-400" />
             </div>
             <div>
@@ -254,7 +262,7 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
 
           <button
             onClick={() => setMessages([messages[0]])}
-            className="text-xs text-slate-300 hover:text-cyan-300 flex items-center gap-1 font-mono transition bg-white/10 px-3.5 py-1.5 rounded-lg border border-white/20 font-bold"
+            className="text-xs text-slate-200 hover:text-cyan-300 flex items-center gap-1 font-mono transition bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20 font-bold"
             title="Reset Terminal"
           >
             <RefreshCw className="w-3.5 h-3.5" /> Clear Log
@@ -276,8 +284,8 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
               <div
                 className={`max-w-[85%] rounded-2xl p-4 text-sm leading-relaxed ${
                   msg.sender === 'user'
-                    ? 'bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 text-black font-bold rounded-br-none shadow-[0_0_20px_rgba(0,240,255,0.4)]'
-                    : 'bg-slate-900 border-2 border-orange-500/50 text-slate-100 rounded-bl-none shadow-md backdrop-blur-md font-medium'
+                    ? 'bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 text-black font-black rounded-br-none shadow-[0_0_25px_rgba(0,240,255,0.4)]'
+                    : 'bg-slate-950/90 border-2 border-orange-500/50 text-slate-100 rounded-bl-none shadow-xl backdrop-blur-md font-medium'
                 }`}
               >
                 <div className="flex items-center justify-between gap-4 mb-1.5">
@@ -322,25 +330,25 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           <span className="text-xs uppercase font-mono text-cyan-400 font-bold shrink-0">Prompts:</span>
           <button 
             onClick={() => handleSendMessage("Introduce yourself and Orange Future Tech")}
-            className="text-xs text-white font-semibold bg-white/10 hover:bg-cyan-500/30 border border-cyan-400/50 hover:border-cyan-300 px-3.5 py-1.5 rounded-full whitespace-nowrap transition"
+            className="text-xs text-white font-bold bg-white/10 hover:bg-cyan-500/30 border border-cyan-400/50 hover:border-cyan-300 px-3.5 py-1.5 rounded-full whitespace-nowrap transition"
           >
             🏢 Introduce Company
           </button>
           <button 
             onClick={() => handleSendMessage("How do I deploy this app to ai.orangefuturetech.com on Vercel?")}
-            className="text-xs text-white font-semibold bg-white/10 hover:bg-cyan-500/30 border border-cyan-400/50 hover:border-cyan-300 px-3.5 py-1.5 rounded-full whitespace-nowrap transition"
+            className="text-xs text-white font-bold bg-white/10 hover:bg-cyan-500/30 border border-cyan-400/50 hover:border-cyan-300 px-3.5 py-1.5 rounded-full whitespace-nowrap transition"
           >
             🚀 Vercel Hosting Guide
           </button>
           <button 
             onClick={() => handleSendMessage("What hardware, software, and AI solutions do you build?")}
-            className="text-xs text-white font-semibold bg-white/10 hover:bg-cyan-500/30 border border-cyan-400/50 hover:border-cyan-300 px-3.5 py-1.5 rounded-full whitespace-nowrap transition"
+            className="text-xs text-white font-bold bg-white/10 hover:bg-cyan-500/30 border border-cyan-400/50 hover:border-cyan-300 px-3.5 py-1.5 rounded-full whitespace-nowrap transition"
           >
             ⚡ Solutions & Products
           </button>
           <button 
             onClick={() => handleSendMessage("Generate an Executive ID Card for me")}
-            className="text-xs text-white font-semibold bg-white/10 hover:bg-cyan-500/30 border border-cyan-400/50 hover:border-cyan-300 px-3.5 py-1.5 rounded-full whitespace-nowrap transition"
+            className="text-xs text-white font-bold bg-white/10 hover:bg-cyan-500/30 border border-cyan-400/50 hover:border-cyan-300 px-3.5 py-1.5 rounded-full whitespace-nowrap transition"
           >
             🪪 Create ID Card
           </button>
@@ -355,12 +363,12 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder="Type your message to CEO Victor Vane..."
-            className="flex-1 bg-slate-900 border-2 border-cyan-500/40 focus:border-cyan-300 rounded-xl px-4 py-3.5 text-sm text-white placeholder-slate-400 outline-none transition font-medium"
+            className="flex-1 bg-slate-950/90 border-2 border-cyan-500/40 focus:border-cyan-300 rounded-2xl px-4 py-3.5 text-sm text-white placeholder-slate-400 outline-none transition font-medium shadow-inner"
           />
           <button
             type="submit"
             disabled={!inputText.trim()}
-            className="glass-button-cyan p-3.5 rounded-xl text-black font-black disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+            className="glass-button-cyan p-3.5 rounded-2xl text-black font-black disabled:opacity-50 disabled:cursor-not-allowed shadow-xl"
           >
             <Send className="w-5 h-5" />
           </button>

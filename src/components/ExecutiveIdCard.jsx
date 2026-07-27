@@ -35,8 +35,8 @@ export default function ExecutiveIdCard() {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
-    const rx = ((y - centerY) / centerY) * -14;
-    const ry = ((x - centerX) / centerX) * 14;
+    const rx = ((y - centerY) / centerY) * -16;
+    const ry = ((x - centerX) / centerX) * 16;
     
     const shineX = (x / rect.width) * 100;
     const shineY = (y / rect.height) * 100;
@@ -64,9 +64,9 @@ export default function ExecutiveIdCard() {
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       
-      <div className="lg:col-span-5 glass-panel rounded-2xl p-6 border-2 border-cyan-500/40 shadow-2xl relative bg-slate-950/95">
+      <div className="lg:col-span-5 glass-panel-futuristic rounded-3xl p-6 border-2 border-cyan-400/50 shadow-[0_0_50px_rgba(0,240,255,0.2)] relative bg-slate-950/95">
         <div className="flex items-center space-x-3 border-b border-cyan-500/30 pb-4 mb-5">
-          <div className="p-2 bg-amber-500/20 border-2 border-amber-400 rounded-xl">
+          <div className="p-2.5 bg-amber-500/20 border-2 border-amber-400 rounded-2xl">
             <Award className="w-6 h-6 text-amber-400" />
           </div>
           <div>
@@ -82,7 +82,7 @@ export default function ExecutiveIdCard() {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full bg-slate-900 border-2 border-cyan-500/40 focus:border-cyan-300 rounded-xl px-3.5 py-2.5 text-white font-medium outline-none"
+              className="w-full bg-slate-950 border-2 border-cyan-500/40 focus:border-cyan-300 rounded-2xl px-4 py-3 text-white font-medium outline-none shadow-inner"
               required
             />
           </div>
@@ -93,7 +93,7 @@ export default function ExecutiveIdCard() {
               type="text"
               value={formData.role}
               onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-              className="w-full bg-slate-900 border-2 border-cyan-500/40 focus:border-cyan-300 rounded-xl px-3.5 py-2.5 text-white font-medium outline-none"
+              className="w-full bg-slate-950 border-2 border-cyan-500/40 focus:border-cyan-300 rounded-2xl px-4 py-3 text-white font-medium outline-none shadow-inner"
               required
             />
           </div>
@@ -105,7 +105,7 @@ export default function ExecutiveIdCard() {
                 type="text"
                 value={formData.department}
                 onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                className="w-full bg-slate-900 border-2 border-cyan-500/40 focus:border-cyan-300 rounded-xl px-3.5 py-2.5 text-white font-medium outline-none"
+                className="w-full bg-slate-950 border-2 border-cyan-500/40 focus:border-cyan-300 rounded-2xl px-4 py-3 text-white font-medium outline-none"
               />
             </div>
             <div>
@@ -113,7 +113,7 @@ export default function ExecutiveIdCard() {
               <select
                 value={formData.clearance}
                 onChange={(e) => setFormData({ ...formData, clearance: e.target.value })}
-                className="w-full bg-slate-900 border-2 border-cyan-500/40 focus:border-cyan-300 rounded-xl px-3.5 py-2.5 text-white font-bold outline-none"
+                className="w-full bg-slate-950 border-2 border-cyan-500/40 focus:border-cyan-300 rounded-2xl px-4 py-3 text-white font-bold outline-none"
               >
                 <option value="LEVEL-5 EXECUTIVE">Level-5 Executive</option>
                 <option value="LEVEL-4 ARCHITECT">Level-4 Lead Architect</option>
@@ -132,7 +132,7 @@ export default function ExecutiveIdCard() {
                   src={img}
                   alt={`Avatar ${idx}`}
                   onClick={() => setFormData({ ...formData, avatarUrl: img })}
-                  className={`w-12 h-12 rounded-xl object-cover cursor-pointer border-2 transition ${
+                  className={`w-12 h-12 rounded-2xl object-cover cursor-pointer border-2 transition ${
                     formData.avatarUrl === img ? 'border-amber-400 scale-110 shadow-lg shadow-amber-500/50 ring-2 ring-amber-400' : 'border-transparent opacity-60 hover:opacity-100'
                   }`}
                 />
@@ -143,7 +143,7 @@ export default function ExecutiveIdCard() {
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full glass-button-orange py-4 rounded-xl text-white font-black font-orbitron flex items-center justify-center gap-2 tracking-wider shadow-2xl"
+              className="w-full glass-button-orange py-4 rounded-2xl text-white font-black font-orbitron flex items-center justify-center gap-2 tracking-wider shadow-2xl"
             >
               <Sparkles className="w-5 h-5 text-yellow-300" /> ISSUE HOLOGRAPHIC ID BADGE
             </button>
@@ -166,12 +166,12 @@ export default function ExecutiveIdCard() {
               transform: `rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg)`,
               transition: tilt.rx === 0 ? 'all 0.5s ease' : 'none'
             }}
-            className="relative w-full bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 rounded-2xl p-6 border-2 border-cyan-400 shadow-[0_0_60px_rgba(0,240,255,0.4)] overflow-hidden text-white cursor-pointer select-none"
+            className="relative w-full bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 rounded-3xl p-6 border-2 border-cyan-400 shadow-[0_0_60px_rgba(0,240,255,0.4)] overflow-hidden text-white cursor-pointer select-none"
           >
             <div 
-              className="absolute inset-0 pointer-events-none transition-opacity duration-300 opacity-70"
+              className="absolute inset-0 pointer-events-none transition-opacity duration-300 opacity-75"
               style={{
-                background: `radial-gradient(circle at ${tilt.shineX}% ${tilt.shineY}%, rgba(255, 255, 255, 0.35) 0%, rgba(0, 240, 255, 0.15) 40%, transparent 80%)`
+                background: `radial-gradient(circle at ${tilt.shineX}% ${tilt.shineY}%, rgba(255, 255, 255, 0.4) 0%, rgba(0, 240, 255, 0.18) 40%, transparent 80%)`
               }}
             />
 
@@ -181,7 +181,7 @@ export default function ExecutiveIdCard() {
 
             <div className="flex items-center justify-between border-b border-cyan-500/40 pb-4 mb-5 relative z-10">
               <div className="flex items-center space-x-2.5">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center font-black font-orbitron text-black text-sm shadow-md">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center font-black font-orbitron text-black text-sm shadow-lg">
                   OF
                 </div>
                 <div>
@@ -201,7 +201,7 @@ export default function ExecutiveIdCard() {
             <div className="grid grid-cols-12 gap-4 items-center relative z-10">
               
               <div className="col-span-4 relative">
-                <div className="relative rounded-xl overflow-hidden border-2 border-cyan-400 shadow-xl shadow-cyan-500/30">
+                <div className="relative rounded-2xl overflow-hidden border-2 border-cyan-400 shadow-xl shadow-cyan-500/30">
                   <img 
                     src={formData.avatarUrl} 
                     alt={formData.name} 
@@ -214,7 +214,7 @@ export default function ExecutiveIdCard() {
               </div>
 
               <div className="col-span-8 space-y-1.5 pl-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-300 font-black bg-amber-500/20 border border-amber-400 px-2 py-0.5 rounded-md">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-300 font-black bg-amber-500/20 border border-amber-400 px-2.5 py-0.5 rounded-md">
                   {formData.clearance}
                 </span>
                 
@@ -239,9 +239,9 @@ export default function ExecutiveIdCard() {
 
             </div>
 
-            <div className="mt-5 pt-3 border-t border-cyan-500/40 flex items-center justify-between relative z-10 bg-slate-950 p-3 rounded-xl border border-cyan-400/30">
+            <div className="mt-5 pt-3 border-t border-cyan-500/40 flex items-center justify-between relative z-10 bg-slate-950 p-3 rounded-2xl border border-cyan-400/30">
               <div className="flex items-center space-x-2.5">
-                <div className="p-1.5 bg-cyan-500/20 border border-cyan-400 rounded-lg">
+                <div className="p-1.5 bg-cyan-500/20 border border-cyan-400 rounded-xl">
                   <QrCode className="w-7 h-7 text-cyan-400" />
                 </div>
                 <div className="text-[10px] font-mono">
@@ -263,7 +263,7 @@ export default function ExecutiveIdCard() {
         <div className="flex items-center space-x-4 pt-2">
           <button
             onClick={handlePrint}
-            className="glass-button-secondary px-6 py-3 rounded-xl text-xs font-bold text-cyan-300 flex items-center gap-2 hover:border-cyan-300 transition"
+            className="glass-button-secondary px-6 py-3 rounded-2xl text-xs font-bold text-cyan-300 flex items-center gap-2 hover:border-cyan-300 transition"
           >
             <Printer className="w-4 h-4 text-cyan-400" /> Print Security Badge
           </button>
@@ -282,7 +282,7 @@ export default function ExecutiveIdCard() {
               </html>
             `)}`}
             download={`${formData.name.replace(/\s+/g, '_')}_ID_Badge.html`}
-            className="glass-button-cyan px-6 py-3 rounded-xl text-xs font-black text-black flex items-center gap-2"
+            className="glass-button-cyan px-6 py-3 rounded-2xl text-xs font-black text-black flex items-center gap-2"
           >
             <Download className="w-4 h-4" /> Download Badge File
           </a>
