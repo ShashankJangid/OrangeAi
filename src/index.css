@@ -11,7 +11,6 @@
   font-family: 'Orbitron', monospace, sans-serif;
 }
 
-/* High-Contrast Glass & Panel Utilities */
 .glass-panel {
   background: rgba(10, 16, 28, 0.92);
   backdrop-filter: blur(20px);
@@ -39,7 +38,6 @@
   transform: translateY(-3px);
 }
 
-/* High-Contrast Action Buttons */
 .glass-button-cyan {
   background: linear-gradient(135deg, #00F0FF 0%, #0088FF 50%, #0044FF 100%);
   color: #000000;
@@ -80,7 +78,6 @@
   box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
 }
 
-/* Text Glow Effects */
 .glow-text-cyan {
   color: #00F0FF;
   text-shadow: 0 0 15px rgba(0, 240, 255, 0.8), 0 0 30px rgba(0, 240, 255, 0.4);
@@ -96,7 +93,6 @@
   text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
 }
 
-/* High Contrast Grid Background */
 .bg-cyber-grid {
   background-image: 
     linear-gradient(rgba(0, 240, 255, 0.07) 1.5px, transparent 1.5px),
@@ -104,7 +100,6 @@
   background-size: 32px 32px;
 }
 
-/* Custom High Contrast Scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

@@ -16,7 +16,6 @@ export default function CyberBackgroundCanvas() {
     resize();
     window.addEventListener('resize', resize);
 
-    // High contrast particles
     const particles = Array.from({ length: 70 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
@@ -38,7 +37,6 @@ export default function CyberBackgroundCanvas() {
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Deep Onyx Black radial glow
       const bgGrad = ctx.createRadialGradient(
         canvas.width * 0.5, canvas.height * 0.3, 100,
         canvas.width * 0.5, canvas.height * 0.5, canvas.width * 0.9
@@ -49,7 +47,6 @@ export default function CyberBackgroundCanvas() {
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Particles & Connections
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         p.x += p.vx;
@@ -65,7 +62,6 @@ export default function CyberBackgroundCanvas() {
         ctx.shadowBlur = 10;
         ctx.fill();
 
-        // Mouse connection
         const dxMouse = mouseX - p.x;
         const dyMouse = mouseY - p.y;
         const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
@@ -78,7 +74,6 @@ export default function CyberBackgroundCanvas() {
           ctx.stroke();
         }
 
-        // Particle connections
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dx = p.x - p2.x;

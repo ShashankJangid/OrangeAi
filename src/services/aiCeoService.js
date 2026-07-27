@@ -10,7 +10,6 @@ Your character profile:
 - Keep spoken/voice answers concise and punchy (2 to 4 sentences unless detailed code or architectural steps are requested).
 `;
 
-// Smart Built-in Fallback Knowledge Engine (Works 100% offline without API key)
 const CEO_FALLBACK_KNOWLEDGE = [
   {
     keywords: ["who are you", "who is the ceo", "your name", "introduce yourself", "tell me about yourself"],
@@ -46,7 +45,6 @@ export async function askCeoAI(userInput, apiKey = '') {
   const cleanInput = userInput.trim();
   if (!cleanInput) return "I am listening. How can I assist you with Orange Future Tech today?";
 
-  // 1. Try Live Google Gemini API if API Key is provided
   if (apiKey && apiKey.length > 10) {
     try {
       const genAI = new GoogleGenerativeAI(apiKey);
@@ -66,7 +64,6 @@ export async function askCeoAI(userInput, apiKey = '') {
     }
   }
 
-  // 2. Intelligent CEO Fallback Decision Matrix
   const lowerInput = cleanInput.toLowerCase();
   
   for (const item of CEO_FALLBACK_KNOWLEDGE) {
@@ -75,7 +72,6 @@ export async function askCeoAI(userInput, apiKey = '') {
     }
   }
 
-  // Dynamic context-aware responses
   if (lowerInput.includes("hello") || lowerInput.includes("hi") || lowerInput.includes("hey")) {
     return "Greetings! I'm Victor Vane, CEO of Orange Future Tech. What strategic initiative or technical challenge can we tackle together today?";
   }

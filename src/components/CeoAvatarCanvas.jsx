@@ -36,7 +36,6 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
       const centerY = canvas.height / 2;
       const baseRadius = Math.min(centerX, centerY) * 0.42;
 
-      // 1. High contrast particle matrix
       particles.forEach(p => {
         p.x += p.speedX * (isSpeaking ? 2 : 1);
         p.y += p.speedY * (isSpeaking ? 2 : 1);
@@ -54,7 +53,6 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
         ctx.fill();
       });
 
-      // 2. Pulse Factor
       let pulseMultiplier = 1;
       if (isSpeaking) {
         pulseMultiplier = 1 + Math.sin(Date.now() * 0.018) * 0.14;
@@ -66,7 +64,6 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
 
       const currentRadius = baseRadius * pulseMultiplier;
 
-      // 3. Radial Core Gradient
       const coreGrad = ctx.createRadialGradient(
         centerX, centerY, 5,
         centerX, centerY, currentRadius * 1.7
@@ -99,7 +96,6 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
       ctx.fillStyle = coreGrad;
       ctx.fill();
 
-      // 4. Rotating Sci-Fi Reticles
       hudAngle += isSpeaking ? 0.05 : 0.02;
 
       ctx.save();
@@ -115,7 +111,6 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
       ctx.stroke();
       ctx.restore();
 
-      // 5. Equalizer Waveform Bars around circle
       const numBars = 44;
       for (let b = 0; b < numBars; b++) {
         const barAngle = (b / numBars) * Math.PI * 2;
@@ -148,7 +143,6 @@ export default function CeoAvatarCanvas({ isSpeaking, isListening, isThinking })
         ctx.stroke();
       }
 
-      // 6. High Contrast CEO Center Badge
       ctx.save();
       ctx.font = '900 26px Orbitron, sans-serif';
       ctx.fillStyle = '#FFFFFF';

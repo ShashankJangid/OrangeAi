@@ -1,5 +1,3 @@
-// Speech-to-Text (STT) and Text-to-Speech (TTS) Service Manager
-
 class SpeechManager {
   constructor() {
     this.recognition = null;
@@ -26,7 +24,6 @@ class SpeechManager {
     if (!this.synthesis) return;
     const loadVoices = () => {
       const voices = this.synthesis.getVoices();
-      // Try to find a crisp executive sounding voice (e.g. Google US English, Samantha, Daniel, Alex, or default)
       const preferred = voices.find(v => 
         (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Daniel") || v.name.includes("Alex") || v.name.includes("Samantha")) && v.lang.startsWith("en")
       ) || voices.find(v => v.lang.startsWith("en")) || voices[0];
@@ -62,7 +59,6 @@ class SpeechManager {
       this.stopListening();
     }
 
-    // Stop speaking if currently talking
     this.stopSpeaking();
 
     this.recognition.onresult = (event) => {
@@ -108,7 +104,6 @@ class SpeechManager {
     if (!this.synthesis) return;
     this.stopSpeaking();
 
-    // Clean text of markdown formatting for speech output
     const cleanText = text
       .replace(/\*\*(.*?)\*\*/g, '$1')
       .replace(/`(.*?)`/g, '$1')

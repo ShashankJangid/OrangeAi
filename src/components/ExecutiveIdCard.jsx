@@ -64,7 +64,6 @@ export default function ExecutiveIdCard() {
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       
-      {/* Left Column: ID Card Form Customizer */}
       <div className="lg:col-span-5 glass-panel rounded-2xl p-6 border-2 border-cyan-500/40 shadow-2xl relative bg-slate-950/95">
         <div className="flex items-center space-x-3 border-b border-cyan-500/30 pb-4 mb-5">
           <div className="p-2 bg-amber-500/20 border-2 border-amber-400 rounded-xl">
@@ -152,14 +151,12 @@ export default function ExecutiveIdCard() {
         </form>
       </div>
 
-      {/* Right Column: 3D Holographic ID Card */}
       <div className="lg:col-span-7 flex flex-col items-center justify-center space-y-6">
         
         <p className="text-xs text-cyan-400 font-mono font-bold flex items-center gap-1.5 animate-pulse">
           <Zap className="w-4 h-4 text-amber-400" /> Hover over card for 3D Holographic Tilt effect
         </p>
 
-        {/* 3D Tilt Container */}
         <div className="perspective-1000 w-full max-w-md">
           <div 
             ref={cardRef}
@@ -171,7 +168,6 @@ export default function ExecutiveIdCard() {
             }}
             className="relative w-full bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 rounded-2xl p-6 border-2 border-cyan-400 shadow-[0_0_60px_rgba(0,240,255,0.4)] overflow-hidden text-white cursor-pointer select-none"
           >
-            {/* Dynamic Light Sheen */}
             <div 
               className="absolute inset-0 pointer-events-none transition-opacity duration-300 opacity-70"
               style={{
@@ -181,10 +177,8 @@ export default function ExecutiveIdCard() {
 
             <div className="absolute inset-0 bg-cyber-grid opacity-30 pointer-events-none" />
 
-            {/* Laser Scan Line */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-hologram-scan" />
 
-            {/* Top Security Banner */}
             <div className="flex items-center justify-between border-b border-cyan-500/40 pb-4 mb-5 relative z-10">
               <div className="flex items-center space-x-2.5">
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center font-black font-orbitron text-black text-sm shadow-md">
@@ -204,7 +198,6 @@ export default function ExecutiveIdCard() {
               </div>
             </div>
 
-            {/* Photo & Credentials */}
             <div className="grid grid-cols-12 gap-4 items-center relative z-10">
               
               <div className="col-span-4 relative">
@@ -246,7 +239,6 @@ export default function ExecutiveIdCard() {
 
             </div>
 
-            {/* Bottom Strip & QR Code */}
             <div className="mt-5 pt-3 border-t border-cyan-500/40 flex items-center justify-between relative z-10 bg-slate-950 p-3 rounded-xl border border-cyan-400/30">
               <div className="flex items-center space-x-2.5">
                 <div className="p-1.5 bg-cyan-500/20 border border-cyan-400 rounded-lg">
@@ -268,7 +260,6 @@ export default function ExecutiveIdCard() {
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex items-center space-x-4 pt-2">
           <button
             onClick={handlePrint}

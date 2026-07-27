@@ -134,16 +134,13 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       
-      {/* Left Column: Holographic CEO Avatar & Sci-Fi Control Terminal */}
       <div className="lg:col-span-5 glass-panel rounded-2xl p-6 flex flex-col items-center justify-between border-2 border-cyan-500/40 shadow-2xl relative overflow-hidden bg-slate-950/95">
         
-        {/* Sci-Fi Corner Brackets */}
         <div className="absolute top-2 left-2 w-3.5 h-3.5 border-t-2 border-l-2 border-cyan-400" />
         <div className="absolute top-2 right-2 w-3.5 h-3.5 border-t-2 border-r-2 border-cyan-400" />
         <div className="absolute bottom-2 left-2 w-3.5 h-3.5 border-b-2 border-l-2 border-cyan-400" />
         <div className="absolute bottom-2 right-2 w-3.5 h-3.5 border-b-2 border-r-2 border-cyan-400" />
 
-        {/* Header Telemetry */}
         <div className="w-full flex items-center justify-between border-b border-cyan-500/30 pb-4 mb-2">
           <div className="flex items-center space-x-2">
             <div className="w-3.5 h-3.5 rounded-full bg-cyan-400 animate-ping" />
@@ -156,10 +153,8 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           </span>
         </div>
 
-        {/* Dynamic Canvas Hologram Avatar */}
         <CeoAvatarCanvas isSpeaking={isSpeaking} isListening={isListening} isThinking={isThinking} />
 
-        {/* CEO Identity Info */}
         <div className="text-center my-3">
           <h2 className="text-2xl font-black font-orbitron text-white flex items-center justify-center gap-2 text-shadow-glow">
             Victor Vane <Award className="w-5 h-5 text-yellow-400" />
@@ -178,7 +173,6 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           </div>
         </div>
 
-        {/* Equalizer Visualizer Strip when Speaking */}
         {isSpeaking && (
           <div className="w-full flex items-center justify-center space-x-1.5 py-2">
             {[40, 75, 35, 95, 55, 85, 45, 100, 65, 35].map((h, idx) => (
@@ -191,10 +185,8 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           </div>
         )}
 
-        {/* High-Contrast Voice Controls */}
         <div className="w-full space-y-3 pt-3 border-t border-cyan-500/30">
           
-          {/* Big Microphone Push-to-Talk Button */}
           <div className="flex items-center justify-center space-x-3">
             <button
               onClick={() => toggleListening()}
@@ -217,7 +209,6 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
             </button>
           </div>
 
-          {/* Voice-to-Voice Loop Toggle */}
           <div className="flex items-center justify-between bg-slate-950 p-3.5 rounded-2xl border border-cyan-500/40 shadow-inner">
             <div className="flex items-center gap-2.5">
               <div className="p-1.5 bg-cyan-500/20 rounded-lg">
@@ -239,7 +230,6 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
             </label>
           </div>
 
-          {/* Live STT Display */}
           {sttTranscript && (
             <div className="p-3 bg-cyan-950 border-2 border-cyan-400 rounded-xl text-xs text-white shadow-lg animate-fadeIn font-mono">
               <span className="font-bold text-cyan-400">Live Speech: </span>"{sttTranscript}"
@@ -249,10 +239,8 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
         </div>
       </div>
 
-      {/* Right Column: High Contrast Chat Console */}
       <div className="lg:col-span-7 glass-panel rounded-2xl p-6 flex flex-col h-[600px] border-2 border-cyan-500/40 shadow-2xl relative bg-slate-950/95">
         
-        {/* Chat Console Header */}
         <div className="flex items-center justify-between pb-4 border-b border-cyan-500/30 mb-4">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-cyan-500/20 rounded-xl border border-cyan-400">
@@ -273,7 +261,6 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           </button>
         </div>
 
-        {/* Message Log Stream */}
         <div className="flex-1 overflow-y-auto space-y-4 pr-2">
           {messages.map((msg) => (
             <div
@@ -331,7 +318,6 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Quick Suggestion Pills */}
         <div className="py-3 flex items-center gap-2 overflow-x-auto no-scrollbar border-t border-cyan-500/30 mt-2">
           <span className="text-xs uppercase font-mono text-cyan-400 font-bold shrink-0">Prompts:</span>
           <button 
@@ -360,7 +346,6 @@ export default function VoiceCeoChat({ apiKey, onSelectIdCardTab, onSelectVercel
           </button>
         </div>
 
-        {/* Text Input Bar */}
         <form 
           onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }} 
           className="flex items-center gap-2 pt-2"
